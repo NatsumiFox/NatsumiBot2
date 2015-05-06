@@ -1,15 +1,17 @@
+import bot.nat.sumi.Main;
 import bot.nat.sumi.Message;
 import bot.nat.sumi.Module;
 import bot.nat.sumi.Server;
-import bot.nat.sumi.User;
 
-public class userInfo extends Module {
+import java.net.URL;
+
+public class listModules extends Module {
 	@Override
 	public void command(Message m, Server srv) {
 		String s = "";
 
-		for(User u : srv.getUsers()){
-			s += u.name +" ";
+		for (URL u : Main.getURLs()) {
+			s += u.getFile().replace("/"+ Main.folder.replace("\\", "/") +"commands/", "") +" ";
 		}
 
 		srv.send(m.channel, m.author, s, m.channel);
@@ -17,6 +19,6 @@ public class userInfo extends Module {
 
 	@Override
 	public String[] reserved() {
-		return new String[]{ "$listusers" };
+		return new String[]{ "$listmodules" };
 	}
 }

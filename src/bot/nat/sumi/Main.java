@@ -1,8 +1,11 @@
 package bot.nat.sumi;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -10,7 +13,7 @@ public class Main {
 	public static final String folder = "H:\\Java\\NatsumiBot2\\data\\";
 
 	public static void main(String[] arg){
-		loadChannels(loadJARs());
+		loadChannels(loadJARs(new String[0]));
 	}
 
 	private static void loadChannels(ArrayList<Module> mod) {
@@ -37,11 +40,11 @@ public class Main {
 	}
 
 	/* load commands */
-	private static ArrayList<Module> loadJARs() {
+	public static ArrayList<Module> loadJARs(String[] ex) {
 		File[] files = new File(folder +"commands/").listFiles();
 		ArrayList<Module> mod = new ArrayList<Module>();
 
-		for(File f : files != null ? files : new File[0]){
+		for(File f : files != null ? rmv(files, ex) : new File[0]){
 			try {
 				loadJAR(f.getAbsolutePath());
 				mod.add(getInstance(f.getName().replace(".jar", ""), f.getAbsolutePath()));
@@ -55,6 +58,22 @@ public class Main {
 		}
 
 		return mod;
+	}
+
+	/* remove certain files from list */
+	private static File[] rmv(File[] files, String[] ex) {
+		ArrayList<File> list = new ArrayList<File>();
+		Collections.addAll(list, files);
+
+		for(String x : ex){
+			for(File f : list.toArray(new File[list.size()])){
+				if(f.getAbsolutePath().equals(x)){
+					list.remove(f);
+				}
+			}
+		}
+
+		return list.toArray(new File[list.size()]);
 	}
 
 	/* get new module instace */
@@ -125,5 +144,19 @@ public class Main {
 		}
 
 		System.out.println(" ...Done!");
+	}
+
+	public static ArrayList<Module> unload(String jar) throws MalformedURLException {
+		ArrayList<URL> url = getURLs();
+		url.remove(new File(jar).toURI().toURL());
+		ClassContainer.createNew(url.toArray(new URL[url.size()]));
+
+		return loadJARs(new String[]{ jar });
+	}
+
+	public static ArrayList<URL> getURLs() {
+		ArrayList<URL> url = new ArrayList<URL>();
+		Collections.addAll(url, ClassContainer.get().getURLs());
+		return url;
 	}
 }

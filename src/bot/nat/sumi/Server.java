@@ -2,6 +2,7 @@ package bot.nat.sumi;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -16,23 +17,23 @@ public class Server {
 	private ArrayList<User> users;
 	private static final int TIMEOUT = 5000;
 
-	public String nick;
-	public final String baseNick;
-	public String ident;
+	public User nick;
+	public String nickUse;
+	public String baseNick;
 	public final String password;
 	public String IP;
 	public int port;
 
-	private int connAttempts;
+	private int connAttempts = 0;
 
 	public Server(ConfigFile cfg, ArrayList<Module> mod) {
 		baseNick = cfg.getField("Preferred nickname").getValue();
 		password = cfg.getField("Nickname password").getValue();
+		nick = new User(baseNick);
 
 		IP = cfg.getField("Server address").getValue();
 		port = Integer.parseInt(cfg.getField("Server port").getValue());
 
-		nick = baseNick;
 		ch = new ArrayList<Channel>();
 		users = new ArrayList<User>();
 		modules = mod;
@@ -43,7 +44,7 @@ public class Server {
 			public void run() {
 				spec = SpecialModules.r();
 				connectLoop();
-				send("USER " + nick + " 0 0 :" +"IRC bot by Natsumi", "");
+				send("USER " + baseNick + " 0 0 :" +"IRC bot by Natsumi", "");
 				nickDo("");
 
 				while(KeepConnection) {
@@ -151,9 +152,16 @@ public class Server {
 		}
 	}
 
+	/* attempt next nickname */
+	public void nextNick() {
+		connAttempts ++;
+		nickDo(String.valueOf(connAttempts));
+	}
+
 	/* send nick */
-	private void nickDo(String n) {
-		send("NICK " + nick + n, "");
+	public void nickDo(String n) {
+		send("NICK " + baseNick + n, "");
+		nickUse = baseNick + n;
 	}
 
 	/* send text to server */
@@ -257,6 +265,12 @@ public class Server {
 
 	/* add user */
 	public void addUser(User user) {
+		for(User u : users){
+			if(u.name.equals(user.name)){
+				return;
+			}
+		}
+
 		users.add(user);
 	}
 
@@ -274,5 +288,29 @@ public class Server {
 	/* get all Users */
 	public User[] getUsers() {
 		return users.toArray(new User[users.size()]);
+	}
+
+	/* get all Modules */
+	public Module[] getModules() {
+		return modules.toArray(new Module[modules.size()]);
+	}
+
+	/* get all Modules */
+	public void reloadModules() {
+		modules = null;
+		modules = Main.loadJARs(new String[0]);
+	}
+
+	/* unload module */
+	public boolean unload(String jar) {
+		try {
+			modules = null;
+			modules = Main.unload(jar);
+			return true;
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 }

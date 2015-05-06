@@ -2,6 +2,7 @@ package bot.nat.sumi;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 
 public class ClassContainer {
     /* main ClassLoader */
@@ -26,4 +27,8 @@ public class ClassContainer {
 
         return false;
     }
+
+	public static void createNew(URL[] url) {
+		cll = new ClassLoader(url, URLClassLoader.getSystemClassLoader());
+	}
 }

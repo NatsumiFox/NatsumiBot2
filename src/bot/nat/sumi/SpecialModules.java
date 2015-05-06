@@ -10,9 +10,24 @@ public class SpecialModules {
 		ret.add(r353());
 		ret.add(r311());
 		ret.add(r319());
+		ret.add(r433());
 		ret.add(nick());
 
 		return ret;
+	}
+
+	private static Module r433() {
+		return new Module() {
+			@Override
+			public void command(Message m, final Server srv) {
+				srv.nextNick();
+			}
+
+			@Override
+			public String[] reserved() {
+				return new String[]{ "433" };
+			}
+		};
 	}
 
 	private static Module nick() {

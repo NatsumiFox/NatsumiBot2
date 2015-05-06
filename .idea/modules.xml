@@ -3,6 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/NatsumiBot2.iml" filepath="$PROJECT_DIR$/NatsumiBot2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/essentials/essentials.iml" filepath="$PROJECT_DIR$/essentials/essentials.iml" />
+      <module fileurl="file://$PROJECT_DIR$/help/help.iml" filepath="$PROJECT_DIR$/help/help.iml" />
+      <module fileurl="file://$PROJECT_DIR$/listModules/listModules.iml" filepath="$PROJECT_DIR$/listModules/listModules.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nick/nick.iml" filepath="$PROJECT_DIR$/nick/nick.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reload/reload.iml" filepath="$PROJECT_DIR$/reload/reload.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reop/repo.iml" filepath="$PROJECT_DIR$/reop/repo.iml" />
       <module fileurl="file://$PROJECT_DIR$/userData/userData.iml" filepath="$PROJECT_DIR$/userData/userData.iml" />
       <module fileurl="file://$PROJECT_DIR$/userInfo/userInfo.iml" filepath="$PROJECT_DIR$/userInfo/userInfo.iml" />
     </modules>

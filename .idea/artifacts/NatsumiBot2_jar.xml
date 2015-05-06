@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="NatsumiBot2:jar">
+    <output-path>$PROJECT_DIR$/</output-path>
+    <root id="archive" name="bot.jar">
+      <element id="module-output" name="NatsumiBot2" />
+    </root>
+  </artifact>
+</component>

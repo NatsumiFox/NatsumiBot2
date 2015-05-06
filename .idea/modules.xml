@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/NatsumiBot2.iml" filepath="$PROJECT_DIR$/NatsumiBot2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userData/userData.iml" filepath="$PROJECT_DIR$/userData/userData.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userInfo/userInfo.iml" filepath="$PROJECT_DIR$/userInfo/userInfo.iml" />
+    </modules>
+  </component>
+</project>
+

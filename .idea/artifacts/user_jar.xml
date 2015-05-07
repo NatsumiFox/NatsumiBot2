@@ -1,8 +1,8 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="nick:jar">
+  <artifact type="jar" name="user:jar">
     <output-path>$PROJECT_DIR$/data/commands</output-path>
-    <root id="archive" name="nick.jar">
-      <element id="module-output" name="nick" />
+    <root id="archive" name="user.jar">
+      <element id="module-output" name="user" />
     </root>
   </artifact>
 </component>

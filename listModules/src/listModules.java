@@ -8,6 +8,10 @@ import java.net.URL;
 public class listModules extends Module {
 	@Override
 	public void command(Message m, Server srv) {
+		if(!srv.getUser(m.author).isBotOp){
+			srv.send(m.channel, m.author, "You need to be a BotOP to perform this", m.channel);
+		}
+
 		String s = "";
 
 		for (URL u : Main.getURLs()) {

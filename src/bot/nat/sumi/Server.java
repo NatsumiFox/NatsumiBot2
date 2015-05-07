@@ -18,33 +18,44 @@ public class Server {
 	private static final int TIMEOUT = 5000;
 
 	public User nick;
-	public String nickUse;
-	public String baseNick;
+	public final String baseNick;
 	public final String password;
 	public String IP;
 	public int port;
+	public final String cfgName;
 
 	private int connAttempts = 0;
 
 	public Server(ConfigFile cfg, ArrayList<Module> mod) {
-		baseNick = cfg.getField("Preferred nickname").getValue();
-		password = cfg.getField("Nickname password").getValue();
-		nick = new User(baseNick);
+		/* get config name */
+		String[] adr = cfg.getFile().replace("\\", "/").split("/");
+		cfgName = adr[adr.length - 1].split("\\.")[0];
 
+		/* resolve nickname */
+		password = cfg.getField("Nickname password").getValue();
+		nick = new User(cfg.getField("Preferred nickname").getValue());
+		baseNick = nick.name;   // created to use new nick on connection restart
+
+		/* resolve port and IP */
 		IP = cfg.getField("Server address").getValue();
 		port = Integer.parseInt(cfg.getField("Server port").getValue());
 
+		/* create channel and user list */
 		ch = new ArrayList<Channel>();
 		users = new ArrayList<User>();
+		users.add(nick);
+
+		/* load channels to memory */
 		modules = mod;
 		loadChannels(cfg.getField("Join Channels").getValue().split(" "));
 
+		/* create main loop */
 		new Timer("server "+ IP +":"+ port).schedule(new TimerTask() {
 			@Override
 			public void run() {
 				spec = SpecialModules.r();
 				connectLoop();
-				send("USER " + baseNick + " 0 0 :" +"IRC bot by Natsumi", "");
+				send("USER "+ nick.name +" 0 0 :" +"IRC bot by Natsumi", "");
 				nickDo("");
 
 				while(KeepConnection) {
@@ -86,7 +97,6 @@ public class Server {
 
 			} else {
 				for(Module mod : spec){
-
 					if(hasCommand(mod.reserved(), data[1])){
 						final Module run = mod;
 						final Message message = new Message(data[0], data[1], data[2], ln.replace(data[0] +" "+ data[1] +" "+ data[2] +" ", ""));
@@ -147,7 +157,7 @@ public class Server {
 	private void chkConn() {
 		if(conn.isClosed()) {
 			connectLoop();
-			send("USER " + nick + " 0 0 :" + "IRC bot by Natsumi", "");
+			send("USER " + nick.name + " 0 0 :" + "IRC bot by Natsumi", "");
 			nickDo("");
 		}
 	}
@@ -161,7 +171,6 @@ public class Server {
 	/* send nick */
 	public void nickDo(String n) {
 		send("NICK " + baseNick + n, "");
-		nickUse = baseNick + n;
 	}
 
 	/* send text to server */
@@ -247,7 +256,7 @@ public class Server {
 		}
 	}
 
-	/* get channel from name */
+	/* get name from name */
 	public Channel getChannel(String chan) {
 		for(Channel c : ch){
 			if(c.name.equalsIgnoreCase(chan)){
@@ -265,13 +274,9 @@ public class Server {
 
 	/* add user */
 	public void addUser(User user) {
-		for(User u : users){
-			if(u.name.equals(user.name)){
-				return;
-			}
+		if(getUser(user.name) == null){
+			users.add(user);
 		}
-
-		users.add(user);
 	}
 
 	/* get User from name */
@@ -283,6 +288,15 @@ public class Server {
 		}
 
 		return null;
+	}
+
+	/* remove user with name */
+	public void rmvUser(String user) {
+		User u = getUser(user);
+
+		if(u != null){
+			users.remove(u);
+		}
 	}
 
 	/* get all Users */

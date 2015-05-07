@@ -25,7 +25,7 @@ public class Main {
 		}
 	}
 
-	private static String read(File f) {
+	public static String read(File f) {
 		try {
 			InputStream is = new FileInputStream(f);
 			java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
@@ -76,7 +76,7 @@ public class Main {
 		return list.toArray(new File[list.size()]);
 	}
 
-	/* get new module instace */
+	/* get new module instance */
 	private static Module getInstance(String str, String file) {
 		try {
 			return (Module) ClassContainer.get().getClass(file, str).newInstance();
@@ -151,6 +151,8 @@ public class Main {
 		url.remove(new File(jar).toURI().toURL());
 		ClassContainer.createNew(url.toArray(new URL[url.size()]));
 
+		/* perform garbage collection */
+		System.gc();
 		return loadJARs(new String[]{ jar });
 	}
 

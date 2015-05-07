@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="userInfo:jar">
-    <output-path>$PROJECT_DIR$/data/commands</output-path>
-    <root id="archive" name="userInfo.jar">
-      <element id="module-output" name="userInfo" />
-    </root>
-  </artifact>
-</component>

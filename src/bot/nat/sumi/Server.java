@@ -117,6 +117,10 @@ public class Server {
 	/* if module contains the command */
 	private boolean hasCommand(String[] lst, String cmd) {
 		for(String c : lst){
+			if(c.equals("")){
+				return true;
+			}
+
 			if(c.startsWith(cmd.toLowerCase())){
 				return true;
 			}

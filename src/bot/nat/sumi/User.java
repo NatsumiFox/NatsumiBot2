@@ -37,7 +37,7 @@ public class User {
 	}
 
 	public void resolveBotOp(Server srv) {
-		String[] list = Main.read(new File(Main.folder +"BOTOPS."+ srv.cfgName +".txt")).split("\\n");
+		String[] list = Main.read(new File(Main.folder +"BOTOPS."+ srv.cfgName +".txt")).replace("\r", "").split("\\n");
 
 		for(String n : list){
 			if(n.equals(name)){

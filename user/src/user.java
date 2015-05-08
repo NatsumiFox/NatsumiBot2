@@ -7,6 +7,7 @@ public class user extends Module {
 
 		if(arg.length <= 1){
 			help(m, srv);
+			return;
 		}
 
 		if(arg[1].equals("help") && arg.length == 3){
@@ -35,25 +36,30 @@ public class user extends Module {
 	}
 
 	private void help(Message m, Server srv, String[] arg) {
-		if(arg[2].equals("help")){
-			srv.send(m.channel, m.author, "What are you doing with your life?", m.channel);
+		switch (arg[2].toLowerCase()) {
+			case "help":
+				srv.send(m.channel, m.author, "What are you doing with your life?", m.channel);
+				break;
 
-		} else if(arg[2].equals("info")){
-			srv.send(m.channel, m.author, "Usage: $user info _nick_", m.channel);
-			srv.send(m.channel, m.author, "Function: lists everything known about said user", m.channel);
+			case "info":
+				srv.send(m.channel, m.author, "Usage: $user info _nick_", m.channel);
+				srv.send(m.channel, m.author, "Function: lists everything known about said user", m.channel);
+				break;
 
-		} else if(arg[2].equals("list")){
-			srv.send(m.channel, m.author, "Usage: $user list", m.channel);
-			srv.send(m.channel, m.author, "Function: lists all users on channels "+ srv.nick.name +" is joined in.", m.channel);
+			case "list":
+				srv.send(m.channel, m.author, "Usage: $user list", m.channel);
+				srv.send(m.channel, m.author, "Function: lists all users on channels " + srv.nick.name + " is joined in.", m.channel);
+				break;
 
-		} else if(arg[2].equals("note")){
-			srv.send(m.channel, m.author, "Usage: $user note _nick_ _text_", m.channel);
-			srv.send(m.channel, m.author, "Function: sends _text_ to _nick_ when (s)he is active next", m.channel);
+			case "note":
+				srv.send(m.channel, m.author, "Usage: $user note _nick_ _text_", m.channel);
+				srv.send(m.channel, m.author, "Function: sends _text_ to _nick_ when (s)he is active next", m.channel);
+				break;
 
-		} else if(arg[2].equals("kick")){
-			srv.send(m.channel, m.author, "Usage: $user kick _nick_ [reason]", m.channel);
-			srv.send(m.channel, m.author, "Function: kicks _nick_ from current channel. [reason] is optional.", m.channel);
-
+			case "kick":
+				srv.send(m.channel, m.author, "Usage: $user kick _nick_ [reason]", m.channel);
+				srv.send(m.channel, m.author, "Function: kicks _nick_ from current channel. [reason] is optional.", m.channel);
+				break;
 		}
 	}
 

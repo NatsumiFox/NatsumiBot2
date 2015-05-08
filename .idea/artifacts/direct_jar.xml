@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="direct:jar">
+    <output-path>$PROJECT_DIR$/data/commands</output-path>
+    <root id="archive" name="direct.jar">
+      <element id="module-output" name="direct" />
+    </root>
+  </artifact>
+</component>

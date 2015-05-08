@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="botOP:jar">
+    <output-path>$PROJECT_DIR$/data/commands</output-path>
+    <root id="archive" name="botOP.jar">
+      <element id="module-output" name="botOP" />
+    </root>
+  </artifact>
+</component>

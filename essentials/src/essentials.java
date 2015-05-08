@@ -39,7 +39,7 @@ public class essentials extends Module {
 				}
 
 			} else if(arg[0].equalsIgnoreCase("$invite")){
-				srv.send("INVITE "+ m.channel +" "+ arg[1], m.channel);
+				srv.send("INVITE "+ arg[1] +" "+ m.channel, m.channel);
 
 			} else if(arg[0].equalsIgnoreCase("$nick")){
 				srv.send("NICK "+ arg[1], m.channel);

@@ -66,8 +66,22 @@ public class direct extends Module {
 		}
 
 		try {
-			srv.send(m.channel, m.author, current.think(thought), m.channel);
+			String think = current.think(thought);
+			int amt = 0;
+
+			while(think.replace(" ", "").equals("")){
+				think = current.think(thought);
+				amt ++;
+
+				if(amt >= 50){
+					srv.send(m.channel, m.author, "Could not think!", m.channel);
+					return;
+				}
+			}
+
+			srv.send(m.channel, m.author, think.replace("\n", "").replace("\r", ""), m.channel);
 			return;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

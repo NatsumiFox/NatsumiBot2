@@ -1,0 +1,12 @@
+name: RoboBotCS
+age: 16
+age min: 14
+age max: 18
+skin color: white
+gender: m
+interested: mf
+height: 180
+weight: 90
+body type: thin
+#people met {
+}

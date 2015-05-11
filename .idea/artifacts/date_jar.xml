@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="date:jar">
+    <output-path>$PROJECT_DIR$/data/commands</output-path>
+    <root id="archive" name="date.jar">
+      <element id="module-output" name="date" />
+    </root>
+  </artifact>
+</component>

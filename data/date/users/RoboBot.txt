@@ -1,0 +1,10 @@
+name: RoboBot
+age max: 17
+age: 16
+skin color: white
+gender: m
+weight: 50
+interested: mf
+height: 170
+#people met {
+}

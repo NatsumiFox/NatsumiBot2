@@ -8,7 +8,7 @@ public class botOP extends Module {
 	public void command(Message m, Server srv) {
 		String[] arg = m.text.split(" ");
 
-		if(arg.length <= 2){
+		if(arg.length < 2){
 			srv.send(m.channel, m.author, "Available commands: add, remove, list, online", m.channel);
 			return;
 		}

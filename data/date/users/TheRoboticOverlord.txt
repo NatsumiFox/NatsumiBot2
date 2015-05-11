@@ -1,0 +1,12 @@
+name: TheRoboticOverlord
+age: 15
+age min: 13
+age max: 17
+skin color: white
+gender: m
+interested: f
+weight: 36
+height: 154
+body type: thin
+#people met {
+}

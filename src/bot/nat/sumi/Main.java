@@ -39,6 +39,19 @@ public class Main {
 		return null;
 	}
 
+	public static boolean write(File f, String data) {
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f, false)))) {
+			out.print(data);
+			out.close();
+			return true;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
 	/* load commands */
 	public static ArrayList<Module> loadJARs(String[] ex) {
 		File[] files = new File(folder +"commands/").listFiles();

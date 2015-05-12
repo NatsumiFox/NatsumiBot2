@@ -1,3 +1,4 @@
+import bot.nat.sumi.Main;
 import bot.nat.sumi.Message;
 import bot.nat.sumi.Module;
 import bot.nat.sumi.Server;
@@ -40,6 +41,11 @@ public class math extends Module {
 				}
 
 				math = ret;
+
+				/* this accounts for negative numbers */
+				if(math.startsWith("-") && (math.indexOf('-') == math.lastIndexOf('-'))){
+					break;
+				}
 			}
 		}
 
@@ -51,9 +57,10 @@ public class math extends Module {
 		while(!math.equals("") && !math.replace(".", "").matches("[0-9]+")){
 			int pow = math.indexOf('$');
 			int mul = math.indexOf('*'), div = math.indexOf('/'), per = math.indexOf('%');
-			int plus = math.indexOf('+'), minus = math.indexOf('-');
+			int plus = math.indexOf('+'), minus = math.startsWith("-") ? math.indexOf('-', 1) : math.indexOf('-');
 			int rotL = math.indexOf('<'), rotR = math.indexOf('>');
 			int or = math.indexOf('|'), and = math.indexOf('&'), xor = math.indexOf('^');
+			math = math.replace("--", "");
 
 			if(pow != -1){
 				if(pow != -1){
@@ -78,11 +85,11 @@ public class math extends Module {
 
 			/* then check addition and subtraction */
 			} else if(plus != -1 || minus != -1){
-				if(minus != -1){
-					math = nextMinus(math, minus);
+				if(plus != -1){
+					math = nextPlus(math, plus);
 
 				} else {
-					math = nextPlus(math, plus);
+					math = nextMinus(math, minus);
 				}
 
 			/* then check shifting */
@@ -94,16 +101,19 @@ public class math extends Module {
 					math = nextRotR(math, rotR);
 				}
 
-			} else if(or != -1 || xor != -1 || and != -1){
-					if(or != -1){
-						math = nextOr(math, or);
+			} else if(or != -1 || xor != -1 || and != -1) {
+				if (or != -1) {
+					math = nextOr(math, or);
 
-					} else if(xor != -1){
-						math = nextXor(math, xor);
+				} else if (xor != -1) {
+					math = nextXor(math, xor);
 
-					} else {
-						math = nextAnd(math, and);
-					}
+				} else {
+					math = nextAnd(math, and);
+				}
+
+			} else if(math.startsWith("-")){
+				return math;
 
 			} else {
 				return "";
@@ -175,10 +185,8 @@ public class math extends Module {
 
 	/* gets next values to calculate */
 	private double[] getNextValues(String math, int pos) {
-		double val1 = Double.parseDouble(math.substring(getBackward(math, pos - 1), pos));
-		double val2 = Double.parseDouble(math.substring(pos + 1, getForward(math, pos + 1)));
-
-		return new double[]{ val1, val2, getBackward(math, pos - 1), getForward(math, pos + 1) };
+		int val1 = getBackward(math, pos - 1), val2 = getForward(math, pos + 1);
+		return new double[]{ Double.parseDouble(math.substring(val1, pos)), Double.parseDouble(math.substring(pos + 1, val2)), val1, val2, };
 	}
 
 	/* replace calculation with result */
@@ -208,7 +216,7 @@ public class math extends Module {
 			}
 		}
 
-		return pos;
+		return pos + 1;
 	}
 
 	/* get closing bracket of statement in math (after last opening bracket recorded) */
@@ -223,6 +231,6 @@ public class math extends Module {
 
 	@Override
 	public String[] reserved() {
-		return new String[]{ "$math" };
+		return new String[]{ Main.cmd +"math" };
 	}
 }

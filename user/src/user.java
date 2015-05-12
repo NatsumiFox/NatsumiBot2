@@ -25,14 +25,22 @@ public class user extends Module {
 		} else if(arg[1].equals("kick") && arg.length >= 3){
 			kick(m, srv, arg);
 
+		} else if(arg[1].equals("update") && arg.length >= 3){
+			update(m, srv, arg);
+
 		} else {
 			help(m, srv);
 		}
 	}
 
+	private void update(Message m, Server srv, String[] arg) {
+		srv.send("WHOIS "+ arg[2], m.channel);
+		srv.send(m.channel, m.author, "Information about '"+ arg[2] +"' will be up to date in a moment!", m.channel);
+	}
+
 	private void help(Message m, Server srv) {
-		srv.send(m.channel, m.author, "Available commands: help, kick, list, info, note", m.channel);
-		srv.send(m.channel, m.author, "Usage: $user help _command_", m.channel);
+		srv.send(m.channel, m.author, "Available commands: help, kick, list, info, note, update", m.channel);
+		srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"useruser help _command_", m.channel);
 	}
 
 	private void help(Message m, Server srv, String[] arg) {
@@ -42,23 +50,28 @@ public class user extends Module {
 				break;
 
 			case "info":
-				srv.send(m.channel, m.author, "Usage: $user info _nick_", m.channel);
+				srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"user info _nick_", m.channel);
 				srv.send(m.channel, m.author, "Function: lists everything known about said user", m.channel);
 				break;
 
 			case "list":
-				srv.send(m.channel, m.author, "Usage: $user list", m.channel);
+				srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"user list", m.channel);
 				srv.send(m.channel, m.author, "Function: lists all users on channels " + srv.nick.name + " is joined in.", m.channel);
 				break;
 
 			case "note":
-				srv.send(m.channel, m.author, "Usage: $user note _nick_ _text_", m.channel);
+				srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"user note _nick_ _text_", m.channel);
 				srv.send(m.channel, m.author, "Function: sends _text_ to _nick_ when (s)he is active next", m.channel);
 				break;
 
 			case "kick":
-				srv.send(m.channel, m.author, "Usage: $user kick _nick_ [reason]", m.channel);
+				srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"user kick _nick_ [reason]", m.channel);
 				srv.send(m.channel, m.author, "Function: kicks _nick_ from current channel. [reason] is optional.", m.channel);
+				break;
+
+			case "update":
+				srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"user update _nick_", m.channel);
+				srv.send(m.channel, m.author, "Function: updates information abut _nick_.", m.channel);
 				break;
 		}
 	}
@@ -89,7 +102,7 @@ public class user extends Module {
 						srv.send("KICK "+ m.channel +" "+ k.name +" :Sorry! I was forced to perform this action.", m.channel);
 
 					} else if(arg.length >= 4){
-						srv.send("KICK "+ m.channel +" "+ k.name +" :"+ m.text.replace("$user kick "+ k.name +" ", ""), m.channel);
+						srv.send("KICK "+ m.channel +" "+ k.name +" :"+ m.text.replace(Main.cmd +"user kick "+ k.name +" ", ""), m.channel);
 
 					}
 				}
@@ -144,6 +157,6 @@ public class user extends Module {
 
 	@Override
 	public String[] reserved() {
-		return new String[]{ "$user" };
+		return new String[]{ Main.cmd +"user" };
 	}
 }

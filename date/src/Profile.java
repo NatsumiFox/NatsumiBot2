@@ -1,4 +1,5 @@
 import bot.nat.sumi.ConfigFile;
+import bot.nat.sumi.Main;
 import bot.nat.sumi.Message;
 import bot.nat.sumi.Server;
 
@@ -64,7 +65,7 @@ public class Profile {
 		ConfigFile cfg = Utils.openUserConfig(m.author);
 
 		if(cfg == null){
-			srv.send(m.channel, m.author, "You do not have a profile! Please create using '$date profile create'", m.channel);
+			srv.send(m.channel, m.author, "You do not have a profile! Please create using '"+ Main.cmd +"date profile create'", m.channel);
 			return;
 		}
 
@@ -325,7 +326,7 @@ public class Profile {
 
 		/* if file exists */
 		if(user.exists()){
-			srv.send(m.channel, m.author, "Your profile already exists! Use '$date profile reset' to delete!", m.channel);
+			srv.send(m.channel, m.author, "Your profile already exists! Use '"+ Main.cmd +"date profile reset' to delete!", m.channel);
 			return;
 		}
 
@@ -353,7 +354,7 @@ public class Profile {
 
 			case "set":
 				srv.send(m.channel, m.author, "Available fields: age, age_min, age_max, skin_color, gender, orientation, height, weight", m.channel);
-				srv.send(m.channel, m.author, "Usage: $date profile set _field_ _text_", m.channel);
+				srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"date profile set _field_ _text_", m.channel);
 				return;
 
 			case "info":
@@ -367,23 +368,24 @@ public class Profile {
 
 	private static void help(Server srv, Message m) {
 		srv.send(m.channel, m.author, "Available commands: create, reset, info, help", m.channel);
-		srv.send(m.channel, m.author, "Usage: $date profile help _command_", m.channel);
+		srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"date profile help _command_", m.channel);
 	}
 
 	public static String setBodyType(ConfigFile cfg) {
-		int type = (Integer.parseInt(cfg.getField("height").getValue()) - 100) - Integer.parseInt(cfg.getField("weight").getValue());
+		int type = Integer.parseInt(cfg.getField("weight").getValue()) - (Integer.parseInt(cfg.getField("height").getValue()) - 100);
+		System.out.println(type);
 
 		if(type <= -15){
 			cfg.setField("body type", "skinny");
 			cfg.flush();
 			return "skinny";
 
-		} else if(type >= -15){
+		} else if(type <= -5){
 			cfg.setField("body type", "thin");
 			cfg.flush();
 			return "thin";
 
-		} else if(type >= -5 && type <= 5){
+		} else if(type <= 5){
 			cfg.setField("body type", "average");
 			cfg.flush();
 			return "average";
@@ -393,13 +395,10 @@ public class Profile {
 			cfg.flush();
 			return "chubby";
 
-		} else if(type <= 25){
+		} else {
 			cfg.setField("body type", "fat");
 			cfg.flush();
 			return "fat";
 		}
-
-		/* wtf happened here */
-		return null;
 	}
 }

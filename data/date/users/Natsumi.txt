@@ -7,13 +7,8 @@ interested: mf
 skin color: white
 height: 185
 weight: 110
-body type: skinny
+body type: fat
 #people met {
 	#Test {
 	}
-}
-#date.current {
-	time: 1431312472202
-	action: 1431312472202
-	date: Test
 }

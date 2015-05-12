@@ -1,0 +1,12 @@
+Traits
+0 - Family
+1 - Wealth
+2 - Enjoyment
+3 - Family & Wealth
+4 - Family & Enjoyment
+5 - Wealth & Enjoyment
+
+Consider
+Family -	Selfless,	Practical,	Somber, 	Touchy, 	Trusting,	Stressed,
+Wealth -	Selfish,	Tough,		Wary, 		Quiet, 		Traditional,	Loner,		Stressed,
+Enjoyment -	Imaginitive,	Wild,		Friendly, 	Untraditional,	Relaxed,	Social,

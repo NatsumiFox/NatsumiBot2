@@ -16,7 +16,7 @@ public class help extends Module {
 			}
 		}
 
-		return ret;
+		return ret.replace("  ", "");
 	}
 
 	@Override

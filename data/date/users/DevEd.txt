@@ -1,0 +1,6 @@
+name: DevEd
+age min: 15
+age max: 20
+gender: m
+#people met {
+}

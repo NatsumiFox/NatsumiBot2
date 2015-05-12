@@ -75,6 +75,9 @@ public class essentials extends Module {
 			User u = srv.getUser(srv.nick.name);
 			u.chan.remove(u.getChan(arg[1]));
 
+		} else if(arg[0].equalsIgnoreCase("$error")){
+			throw new RuntimeException("Error!");
+
 		} else {
 			srv.send(m.channel, m.author, "Not proper arguments!", m.channel);
 		}
@@ -91,6 +94,6 @@ public class essentials extends Module {
 
 	@Override
 	public String[] reserved() {
-		return new String[]{ "$join", "$part", "$quit", "$invite", "$nick", "$raw" };
+		return new String[]{ "$join", "$part", "$quit", "$invite", "$nick", "$raw", "$error" };
 	}
 }

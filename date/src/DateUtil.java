@@ -1,4 +1,5 @@
 import bot.nat.sumi.ConfigFile;
+import bot.nat.sumi.Main;
 import bot.nat.sumi.Message;
 import bot.nat.sumi.Server;
 
@@ -11,7 +12,7 @@ public class DateUtil {
 		ConfigFile cfg = Utils.openUserConfig(m.author);
 
 		if(cfg == null){
-			srv.send(m.channel, m.author, "You do not have a profile! Please create using '$date profile create'", m.channel);
+			srv.send(m.channel, m.author, "You do not have a profile! Please create using "+ Main.cmd +"date profile create'", m.channel);
 			return;
 		}
 
@@ -35,7 +36,7 @@ public class DateUtil {
 		ConfigFile cfg = Utils.openUserConfig(m.author);
 
 		if(cfg == null){
-			srv.send(m.channel, m.author, "You do not have a profile! Please create using '$date profile create'", m.channel);
+			srv.send(m.channel, m.author, "You do not have a profile! Please create using '"+ Main.cmd +"date profile create'", m.channel);
 			return;
 		}
 
@@ -85,7 +86,7 @@ public class DateUtil {
 
 				} else {
 					if(newDate(chk)){
-						if(isFreeDate(arg[2])){
+						if(isFreeDate(chk)){
 							initDate(cfg, chk, srv, m);
 							return;
 						}

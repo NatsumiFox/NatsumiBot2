@@ -101,11 +101,11 @@ public class date extends Module {
 
 	private void help(Server srv, Message m) {
 		srv.send(m.channel, m.author, "Available commands: profile, info, new, stop, help", m.channel);
-		srv.send(m.channel, m.author, "Usage: $date help _command_", m.channel);
+		srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"date help _command_", m.channel);
 	}
 
 	@Override
 	public String[] reserved() {
-		return new String[]{ "$date" };
+		return new String[]{ Main.cmd +"date" };
 	}
 }

@@ -86,12 +86,20 @@ public class Server {
 						final Message message = new Message(data[0].replace(":", "").split("!")[0], data[1], data[2], ln.replace(data[0] +" "+ data[1] +" "+ data[2] +" :", ""));
 						final Server srv = this;
 
-						new Thread("server "+ IP +":"+ port +" "+ data[1]){
+						Thread t = new Thread("server "+ IP +" "+ data[2]){
 							@Override
 							public void run(){
 								run.command(message, srv);
 							}
-						}.start();
+						};
+						t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+							@Override
+							public void uncaughtException(Thread t, Throwable e) {
+								send("PRIVMSG "+ t.getName().split(" ")[2] +" :"+ Format.BOLD + Format.Color.RED + e.toString(), "ERROR");
+								e.printStackTrace();
+							}
+						});
+						t.start();
 					}
 				}
 
@@ -102,7 +110,7 @@ public class Server {
 						final Message message = new Message(data[0], data[1], data[2], ln.replace(data[0] +" "+ data[1] +" "+ data[2] +" ", ""));
 						final Server srv = this;
 
-						new Thread("server "+ IP +":"+ port +" "+ data[1]){
+						new Thread("server "+ IP +" <<<"){
 							@Override
 							public void run(){
 								run.command(message, srv);

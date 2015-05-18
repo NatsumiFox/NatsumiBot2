@@ -1,0 +1,14 @@
+name: xXAmy666Xx
+gender: f
+interested: mf
+age: 17
+skin color: black
+height: 150
+weight: 40
+body type: thin
+desired trait: 4
+undesired trait: 3
+date rate: 8
+#var {
+	date: Natsumi
+}

@@ -1,0 +1,14 @@
+name: MyNameIsBeatrix
+gender: f
+interested: f
+age: 20
+skin color: white
+height: 165
+weight: 95
+body type: fat
+desired trait: 5
+undesired trait: 2
+date rate: 44
+#var {
+	date:  
+}

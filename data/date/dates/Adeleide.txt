@@ -1,0 +1,14 @@
+name: MsAdeleide
+gender: f
+interested: mf
+age: 17
+skin color: white
+height: 180
+weight: 60
+body type: thin
+desired trait: 1
+undesired trait: 6
+date rate: 80
+#var {
+	date:  
+}

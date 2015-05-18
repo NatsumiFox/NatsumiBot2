@@ -9,4 +9,12 @@ weight: 36
 height: 154
 body type: thin
 #people met {
+	#Trish333 {
+		experience: 80
+		relation: -1
+	}
+	#MsAdeleide {
+		experience: 32
+		relation: -1
+	}
 }

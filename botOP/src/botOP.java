@@ -48,8 +48,12 @@ public class botOP extends Module {
 	}
 
 	private void add(Message m, Server srv, String[] arg) {
-		User u = srv.getUser(arg[2]);
+		if(!srv.getUser(m.author).isBotOp){
+			srv.send(m.channel, m.author, "you must be botOP to do this!", m.channel);
+			return;
+		}
 
+		User u = srv.getUser(arg[2]);
 		if(u == null){
 			srv.send(m.channel, m.author, "user "+ arg[2] +" not found!", m.channel);
 			return;

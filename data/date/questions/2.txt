@@ -1,0 +1,7 @@
+q: What would you rather do at night?
+a1: Watch a movie.
+a1e: 1
+a2: Party.
+a2e: 4
+a3: Check stocks.
+a3e: 2

@@ -1,0 +1,14 @@
+name: JohnTheBossManDood
+gender: m
+interested: mf
+age: 19
+skin color: white
+height: 200
+weight: 80
+body type: thin
+desired trait: 1
+undesired trait: 4
+date rate: 5
+#var {
+	date:  
+}

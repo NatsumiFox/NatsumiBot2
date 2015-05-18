@@ -1,0 +1,14 @@
+name: CuntDestroyer
+gender: m
+interested: m
+age: 14
+skin color: white
+height: 160
+weight: 30
+body type: thin
+desired trait: 2
+undesired trait: 1
+date rate: 90
+#var {
+	date:  
+}

@@ -1,0 +1,14 @@
+name: 436Cat8356
+gender: f
+interested: mf
+age: 18
+skin color: black
+height: 160
+weight: 74
+body type: chubby
+desired trait: 2
+undesired trait: 1
+date rate: 60
+#var {
+	date:  
+}

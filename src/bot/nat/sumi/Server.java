@@ -129,7 +129,7 @@ public class Server {
 				return true;
 			}
 
-			if(c.startsWith(cmd.toLowerCase())){
+			if(cmd.toLowerCase().startsWith(c) && c.startsWith(cmd.toLowerCase())){
 				return !cmd.equals("");
 			}
 		}

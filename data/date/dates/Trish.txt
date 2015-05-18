@@ -1,0 +1,14 @@
+name: Trish333
+gender: f
+interested: m
+age: 16
+skin color: white
+height: 160
+weight: 60
+body type: average
+desired trait: 4
+undesired trait: 1
+date rate: 20
+#var {
+	date:
+}

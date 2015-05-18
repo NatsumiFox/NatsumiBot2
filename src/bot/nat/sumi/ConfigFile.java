@@ -105,8 +105,7 @@ public class ConfigFile {
         }
 
         /* else warn and return null */
-        System.err.println(this.getClass() + ": Warning! Field '" + field + "' not found in '" + file +"'");
-        return null;
+        throw new NullPointerException(this.getClass() + ": Warning! Field '" + field + "' not found in '" + file +"'");
     }
 
     /* gets target field (if exists)
@@ -144,8 +143,7 @@ public class ConfigFile {
         }
 
         /* else warn and return null */
-        System.err.println(this.getClass() + ": Warning! Field '" + field + "' could not be created to '" + file +"'");
-        return null;
+        throw new NullPointerException(this.getClass() + ": Warning! Field '" + field + "' could not be created to '" + file +"'");
     }
 
     /* gets target field (if exists) to a value, or creates new one if does not exist.
@@ -192,8 +190,7 @@ public class ConfigFile {
         }
 
         /* else warn and return null */
-        System.err.println(this.getClass() + ": Warning! Field '" + field + "' could not be removed from '" + file +"'");
-        return false;
+        throw new NullPointerException(this.getClass() + ": Warning! Field '" + field + "' could not be removed from '" + file +"'");
     }
 
     /* gets target field (if exists) to a value, or creates new one if does not exist.
@@ -215,6 +212,19 @@ public class ConfigFile {
         return false;
     }
 
+	/* gets all sections
+	 * permissions: READ */
+	public Section[] getSections() {
+        /* check this can be read from */
+		if (!hasPermission(READ)) {
+			permissionError(READ);
+			return null;
+		}
+
+		/* return sections */
+		return sect.toArray(new Section[sect.size()]);
+	}
+
 	/* gets target section (if exists), else sends warning
 	 * permissions: READ */
 	public Section getSection(String section) {
@@ -233,8 +243,7 @@ public class ConfigFile {
 		}
 
         /* else warn and return null */
-		System.err.println(this.getClass() + ": Warning! Field '" + field + "' not found in '" + file +"'");
-		return null;
+		throw new NullPointerException(this.getClass() + ": Warning! Section '" + section + "' not found in '" + file +"'");
 	}
 
 	/* gets target section (if exists)
@@ -277,8 +286,7 @@ public class ConfigFile {
 		}
 
         /* else warn and return null */
-		System.err.println(this.getClass() + ": Warning! Field '" + field + "' could not be created to '" + file +"'");
-		return null;
+		throw new NullPointerException(this.getClass() + ": Warning! Section '" + section + "' could not be created to '" + file +"'");
 	}
 
 	/* gets target section (if exists), or creates new one if does not exist.
@@ -322,8 +330,7 @@ public class ConfigFile {
 		}
 
         /* else warn and return null */
-		System.err.println(this.getClass() + ": Warning! Field '" + field + "' could not be removed from '" + file +"'");
-		return false;
+		throw new NullPointerException(this.getClass() + ": Warning! Section '" + section + "' could not be removed from '" + file +"'");
 	}
 
 	/* gets target field (if exists) to a value, or creates new one if does not exist.
@@ -367,7 +374,7 @@ public class ConfigFile {
 
     /* send insufficient permissions warning to console */
     private void permissionError(int req) {
-        System.err.println(this.getClass() + ": Warning! permissions not sufficient! Required permissions: "+ getPermString(req));
+        throw new NullPointerException(this.getClass() + ": Warning! permissions not sufficient! Required permissions: "+ getPermString(req));
     }
 
     /* returns String representation of what permissions are needed */
@@ -495,8 +502,7 @@ public class ConfigFile {
 			}
 
             /* else warn and return null */
-			System.err.println(this.getClass() + ": Warning! Field '" + field + "' could not be created to '" + file + "'");
-			return null;
+			throw new NullPointerException(this.getClass() + ": Warning! Field '" + field + "' could not be created to '" + file + "'");
 		}
 
 		/* gets target field (if exists) to a value, or creates new one if does not exist.
@@ -537,8 +543,7 @@ public class ConfigFile {
 			}
 
             /* else warn and return null */
-			System.err.println(this.getClass() + ": Warning! Field '" + field + "' not found in '" + file +"'");
-			return null;
+			throw new NullPointerException(this.getClass() + ": Warning! Field '" + field + "' not found in '" + file +"'");
 		}
 
 		/* gets target field (if exists) */
@@ -571,8 +576,7 @@ public class ConfigFile {
 			}
 
         /* else warn and return null */
-			System.err.println(this.getClass() + ": Warning! Field '" + field + "' could not be removed from '" + file +"'");
-			return false;
+			throw new NullPointerException(this.getClass() + ": Warning! Field '" + field + "' could not be removed from '" + file +"'");
 		}
 
 		/* gets target field (if exists) to a value, or creates new one if does not exist. */
@@ -595,6 +599,11 @@ public class ConfigFile {
 			return getSection_(section) != null;
 		}
 
+		/* gets all sections */
+		public Section[] getSections() {
+			return sect.toArray(new Section[sect.size()]);
+		}
+
 		/* gets target section (if exists), else sends warning */
 		public Section getSection(String section) {
             /* get the actual field */
@@ -606,8 +615,7 @@ public class ConfigFile {
 			}
 
             /* else warn and return null */
-			System.err.println(this.getClass() + ": Warning! Field '" + field + "' not found in '" + file +"'");
-			return null;
+			throw new NullPointerException(this.getClass() + ": Warning! Section '" + section + "' not found in '" + file +"'");
 		}
 
 		/* gets target section (if exists) */
@@ -634,8 +642,7 @@ public class ConfigFile {
 			}
 
             /* else warn and return null */
-			System.err.println(this.getClass() + ": Warning! Field '" + field + "' could not be created to '" + file + "'");
-			return null;
+			throw new NullPointerException(this.getClass() + ": Warning! Section '" + section + "' could not be created to '" + file + "'");
 		}
 
 		/* gets target section (if exists), or creates new one if does not exist. */
@@ -666,8 +673,7 @@ public class ConfigFile {
 			}
 
             /* else warn and return null */
-			System.err.println(this.getClass() + ": Warning! Field '" + field + "' could not be removed from '" + file +"'");
-			return false;
+			throw new NullPointerException(this.getClass() + ": Warning! Section '" + section + "' could not be removed from '" + file +"'");
 		}
 
 		/* gets target field (if exists) to a value, or creates new one if does not exist. */

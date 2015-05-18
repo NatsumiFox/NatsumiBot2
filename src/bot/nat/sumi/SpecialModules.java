@@ -35,6 +35,9 @@ public class SpecialModules {
 				}
 
 				Chan c = srv.getUser(m.text.split(" ")[1]).getChan(m.channel);
+				if(c == null){
+					return;
+				}
 
 				if(m.text.startsWith("+")){
 					c.addUserLevel(getLevel(m.text.split(" ")[0].replace("+", "")));

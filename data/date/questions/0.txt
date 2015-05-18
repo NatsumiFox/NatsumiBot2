@@ -1,0 +1,7 @@
+q: Where in the political spectrum would you put yourself at?
+a1: Right-wing
+a1e: 2
+a2: Left-wing
+a2e: 1
+a3: center
+a3e: 4

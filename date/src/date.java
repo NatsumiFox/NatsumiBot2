@@ -37,28 +37,74 @@ public class date extends Module {
 					info(srv, m, arg);
 					return;
 
+				case "q":
+					q(srv, m, arg);
+					return;
+
+				case "qadd":
+					Question.add(srv, m, arg);
+					return;
+
+				case "qrmv":case "qdel":
+					Question.rmv(srv, m, arg);
+					return;
+
+				case "qsee":
+					Question.see(srv, m, arg);
+					return;
+
 				default:
 					help(srv, m);
 			}
 		}
 	}
 
+	private void q(Server srv, Message m, String[] arg) {
+		ConfigFile cfg = Utils.openUserConfig(m.author);
+
+		if(cfg == null){
+			Utils.send(srv, m.channel, m.author, "You do not have a profile! Please create using '"+ Main.cmd +"date profile create'", m.channel);
+			return;
+		}
+
+		if(!cfg.containsSection("date.current")){
+			Utils.send(srv, m.channel, m.author, "You have no active date.", m.channel);
+			return;
+		}
+
+		if(Utils.chkDateTimeout(cfg)){
+			Utils.send(srv, m.channel, m.author, "Your date just ended.", m.channel);
+			return;
+		}
+
+		if(cfg.getSection("date.current").getField("question").getValue().replace(" ", "").equals("")){
+			Question.next(srv, m, arg);
+
+		} else if(arg.length == 3){
+			Question.answer(srv, m, arg[2]);
+
+		} else {
+			Utils.send(srv, m.channel, m.author, "Illegal arguments", m.channel);
+		}
+	}
+
 	private void info(Server srv, Message m, String[] arg) {
 		if(arg.length < 3){
-			srv.send(m.channel, m.author, "Please supply date name!", m.channel);
+			Utils.send(srv, m.channel, m.author, "Please supply date name!", m.channel);
 			return;
 		}
 
 		if(Utils.openUserConfig(m.author) == null){
-			srv.send(m.channel, m.author, "You do not have a profile! Please create using '$date profile create'", m.channel);
+			Utils.send(srv, m.channel, m.author, "You do not have a profile! Please create using '$date profile create'", m.channel);
 			return;
 		}
 
+		Utils.chkDateTimeout(Utils.openUserConfig(m.author));
 		String[] fields = Utils.dateInfoFields();
 		ConfigFile cfg = Utils.openDateConfig(arg[2]);
 
 		if(cfg == null || !Utils.openUserConfig(m.author).getSection("people met").containsSection(arg[2])){
-			srv.send(m.channel, m.author, "Unknown person: '"+ arg[2] +"'", m.channel);
+			Utils.send(srv, m.channel, m.author, "Unknown person: '"+ arg[2] +"'", m.channel);
 			return;
 		}
 
@@ -70,7 +116,7 @@ public class date extends Module {
 			}
 		}
 
-		srv.send(m.channel, m.author, Arrays.toString(fls.toArray(new ConfigFile.Field[fls.size()])) +
+		Utils.send(srv, m.channel, m.author, Arrays.toString(fls.toArray(new ConfigFile.Field[fls.size()])) +
 				", currently "+ (cfg.getSection("var").getField("date").getValue().equals(" ") ? "isn't on a date" :
 				"is on a date with '"+ cfg.getSection("var").getField("date").getValue() +"'"), m.channel);
 	}
@@ -78,21 +124,27 @@ public class date extends Module {
 	private void help(Server srv, Message m, String[] arg) {
 		switch (arg[2]){
 			case "profile":
-				srv.send(m.channel, m.author, "Set information about your profile", m.channel);
-				srv.send(m.channel, m.author, "Available commands: create, reset", m.channel);
+				Utils.send(srv, m.channel, m.author, "Set information about your profile", m.channel);
+				Utils.send(srv, m.channel, m.author, "Available commands: create, reset, set, met, info, help", m.channel);
 				return;
 
 			case "new":
-				srv.send(m.channel, m.author, "Arrange a new date. You can additionally supply person's name to date him/her, if you already know each other.", m.channel);
+				Utils.send(srv, m.channel, m.author, "Arrange a new date. You can additionally supply person's name to date him/her, if you already know each other.", m.channel);
 				return;
 
 			case "stop":
-				srv.send(m.channel, m.author, "Stops your current date. Person you are dating probably won't be happy about it.", m.channel);
+				Utils.send(srv, m.channel, m.author, "Stops your current date. Person you are dating probably won't be happy about it.", m.channel);
 				return;
 
 			case "info":
-				srv.send(m.channel, m.author, "Get information about a person you've met. You must supply a name", m.channel);
+				Utils.send(srv, m.channel, m.author, "Get information about a person you've met. You must supply a name", m.channel);
 				return;
+
+			case "q":
+				Utils.send(srv, m.channel, m.author, "Makes your date ask you a question, and give 3 basic answers. After you use this, you use '"+
+						Main.cmd +"date q 1/2/3' to answer it.", m.channel);
+				return;
+
 
 			default:
 				help(srv, m);
@@ -100,8 +152,8 @@ public class date extends Module {
 	}
 
 	private void help(Server srv, Message m) {
-		srv.send(m.channel, m.author, "Available commands: profile, info, new, stop, help", m.channel);
-		srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"date help _command_", m.channel);
+		Utils.send(srv, m.channel, m.author, "Available commands: profile, info, new, stop, q, help", m.channel);
+		Utils.send(srv, m.channel, m.author, "Usage: "+ Main.cmd +"date help _command_", m.channel);
 	}
 
 	@Override

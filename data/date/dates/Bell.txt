@@ -1,0 +1,14 @@
+name: BellDell
+gender: f
+interested: m
+age: 14
+skin color: white
+height: 140
+weight: 40
+body type: average
+desired trait: 2
+undesired trait: 1
+date rate: 1
+#var {
+	date:
+}

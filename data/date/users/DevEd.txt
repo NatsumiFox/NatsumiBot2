@@ -1,6 +1,16 @@
 name: DevEd
+age: 17
 age min: 15
-age max: 20
+age max: 22
+skin color: white
 gender: m
+interested: f
+height: 190
+weight: 90
+body type: average
 #people met {
+	#MsAdeleide {
+		experience: 128
+		relation: -4
+	}
 }

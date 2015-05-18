@@ -1,0 +1,7 @@
+q: Do you play video games?
+a1e: 2
+a1: No
+a2e: 1
+a2: Sometimes
+a3e: 4
+a3: Often

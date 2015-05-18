@@ -1,5 +1,5 @@
 Server address: irc.badnik.net
 Server port: 6667
-Join Channels: #bored
+Join Channels: #bored #hell
 Preferred nickname: NatsumiBot
 Nickname password: !

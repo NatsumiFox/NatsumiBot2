@@ -9,6 +9,30 @@ height: 185
 weight: 110
 body type: fat
 #people met {
-	#Test {
+	#MsAdeleide {
+		experience: 128
+		relation: -1
 	}
+	#xXAmy666Xx {
+		experience: 48
+		relation: 0
+	}
+	#MyNameIsBeatrix {
+		experience: 0
+		relation: 0
+	}
+	#JohnTheBossManDood {
+		experience: 0
+		relation: 0
+	}
+	#436Cat8356 {
+		experience: 0
+		relation: 0
+	}
+}
+#date.current {
+	time: 1431869812401
+	action: 1431869830460
+	date: xXAmy666Xx
+	question:  
 }

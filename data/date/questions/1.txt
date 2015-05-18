@@ -1,0 +1,7 @@
+q: Which of these is the most important thing to you?
+a1: Enjoyment
+a1e: 4
+a2: Wealth
+a2e: 2
+a3: Family
+a3e: 1

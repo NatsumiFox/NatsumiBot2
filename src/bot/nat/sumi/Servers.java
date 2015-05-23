@@ -10,4 +10,14 @@ public class Servers {
 	public static void addServer(Server c){
 		srv.add(c);
 	}
+
+	public static Server get(String IP){
+		for(Server s : srv){
+			if(s.IP.equals(IP)){
+				return s;
+			}
+		}
+
+		return null;
+	}
 }

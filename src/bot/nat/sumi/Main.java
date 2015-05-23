@@ -13,6 +13,9 @@ public class Main {
 	public static final String folder = "B:\\Java\\NatsumiBot2\\data\\";
 	public static final String cmd = "$";	// command prefix
 
+    private static ArrayList<Module> spec;
+    private static ArrayList<Module> modules;
+
 	public static void main(String[] arg){
 		loadChannels(loadJARs(new String[0]));
 	}
@@ -41,7 +44,11 @@ public class Main {
 	}
 
 	public static boolean write(File f, String data) {
-		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f, false)))) {
+		return write(f, data, false);
+	}
+
+	public static boolean write(File f, String data, boolean append) {
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(f, append)))) {
 			out.print(data);
 			out.close();
 			return true;
@@ -54,24 +61,22 @@ public class Main {
 	}
 
 	/* load commands */
-	public static ArrayList<Module> loadJARs(String[] ex) {
+	public static void loadJARs(String[] ex) throws MalformedURLException {
+        for(Module m : modules){
+            unload(m.jar);
+        }
+
 		File[] files = new File(folder +"commands/").listFiles();
-		ArrayList<Module> mod = new ArrayList<Module>();
+        modules = new ArrayList<>();
 
 		for(File f : files != null ? rmv(files, ex) : new File[0]){
 			try {
 				loadJAR(f.getAbsolutePath());
-				mod.add(getInstance(f.getName().replace(".jar", ""), f.getAbsolutePath()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
+				modules.add(getInstance(f.getName().replace(".jar", ""), f.getAbsolutePath()));
+			} catch (IOException | ClassNotFoundException | URISyntaxException e) {
 				e.printStackTrace();
 			}
-		}
-
-		return mod;
+        }
 	}
 
 	/* remove certain files from list */
@@ -94,13 +99,11 @@ public class Main {
 	private static Module getInstance(String str, String file) {
 		try {
 			return (Module) ClassContainer.get().getClass(file, str).newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 
-		return null;
+        return null;
 	}
 
 	/* loads lang in JAR to memory for use */
@@ -160,14 +163,24 @@ public class Main {
 		System.out.println(" ...Done!");
 	}
 
-	public static ArrayList<Module> unload(String jar) throws MalformedURLException {
+	public static void unload(String jar) throws MalformedURLException {
 		ArrayList<URL> url = getURLs();
 		url.remove(new File(jar).toURI().toURL());
 		ClassContainer.createNew(url.toArray(new URL[url.size()]));
 
+        /* close all Closed modules */
+        for(Module m : modules){
+            if(m.jar.equals(jar)) {
+                if (m instanceof Closed) {
+                    ((Closed) m).close();
+                }
+
+                modules.remove(m);
+            }
+        }
+
 		/* perform garbage collection */
 		System.gc();
-		return loadJARs(new String[]{ jar });
 	}
 
 	public static ArrayList<URL> getURLs() {

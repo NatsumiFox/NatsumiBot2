@@ -219,7 +219,7 @@ public class math extends Module {
 			return (val[0].doubleValue() >= 0 ? "" : "-") +"inf";
 		}
 
-		return calcReplace(math, val[2].doubleValue(), val[3].doubleValue(), val[0].divide(val[1], BigDecimal.ROUND_UNNECESSARY));
+		return calcReplace(math, val[2].doubleValue(), val[3].doubleValue(), val[0].divide(val[1], BigDecimal.ROUND_HALF_UP));
 	}
 
 	private String nextMul(String math, int pos) {
@@ -267,7 +267,7 @@ public class math extends Module {
 
 		} else if(!s.toLowerCase().contains("a") && !s.toLowerCase().contains("b") && !s.toLowerCase().contains("c") &&
 				!s.toLowerCase().contains("d") && !s.toLowerCase().contains("e") && !s.toLowerCase().contains("f")){
-			return new BigDecimal(s);
+			return new BigDecimal(s.contains(".") ? s : s +".0");
 
 		} else {
 			throw new NumberFormatException("Non-Hexadecimal string '"+ s +"' contains hexadecimal characters!");

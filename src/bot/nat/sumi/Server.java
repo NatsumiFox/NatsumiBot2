@@ -12,8 +12,6 @@ public class Server {
 	private boolean KeepConnection = true;
 	private Socket conn;
 	private ArrayList<Channel> ch;
-	private ArrayList<Module> spec;
-	private ArrayList<Module> modules;
 	private ArrayList<User> users;
 	private static final int TIMEOUT = 5000;
 

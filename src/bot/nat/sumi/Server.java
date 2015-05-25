@@ -24,7 +24,7 @@ public class Server {
 
 	private int connAttempts = 0;
 
-	public Server(ConfigFile cfg, ArrayList<Module> mod) {
+	public Server(ConfigFile cfg) {
 		/* get config name */
 		String[] adr = cfg.getFile().replace("\\", "/").split("/");
 		cfgName = adr[adr.length - 1].split("\\.")[0];
@@ -39,19 +39,17 @@ public class Server {
 		port = Integer.parseInt(cfg.getField("Server port").getValue());
 
 		/* create channel and user list */
-		ch = new ArrayList<Channel>();
-		users = new ArrayList<User>();
+		ch = new ArrayList<>();
+		users = new ArrayList<>();
 		users.add(nick);
 
 		/* load channels to memory */
-		modules = mod;
 		loadChannels(cfg.getField("Join Channels").getValue().split(" "));
 
 		/* create main loop */
 		new Timer("server "+ IP +":"+ port).schedule(new TimerTask() {
 			@Override
 			public void run() {
-				spec = SpecialModules.r();
 				connectLoop();
 				send("USER "+ nick.name +" 0 0 :" +"IRC bot by Natsumi", "");
 				nickDo("");
@@ -78,7 +76,7 @@ public class Server {
 				send("PONG "+ data[1], "PINGPONG");
 
 			} else if(data[1].equals("PRIVMSG")){
-				for(Module mod : modules){
+				for(Module mod : Main.modules){
 					if(hasCommand(mod.reserved(), data[3].replace(":", ""))){
 						final Module run = mod;
 						final Message message = new Message(data[0].replace(":", "").split("!")[0], data[1], data[2], ln.replace(data[0] +" "+ data[1] +" "+ data[2] +" :", ""));
@@ -102,7 +100,7 @@ public class Server {
 				}
 
 			} else {
-				for(Module mod : spec){
+				for(Module mod : Main.spec){
 					if(hasCommand(mod.reserved(), data[1])){
 						final Module run = mod;
 						final Message message = new Message(data[0], data[1], data[2], ln.replace(data[0] +" "+ data[1] +" "+ data[2] +" ", ""));
@@ -316,21 +314,25 @@ public class Server {
 
 	/* get all Modules */
 	public Module[] getModules() {
-		return modules.toArray(new Module[modules.size()]);
+		return Main.modules.toArray(new Module[Main.modules.size()]);
 	}
 
 	/* get all Modules */
 	public void reloadModules() {
-		modules = null;
-		modules = Main.loadJARs(new String[0]);
-	}
+        try {
+            Main.modules = null;
+            Main.loadJARs();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/* unload module */
 	public boolean unload(String jar) {
 		try {
-			modules = null;
-			modules = Main.unload(jar);
+			Main.unload(jar);
 			return true;
+
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -1,162 +1,143 @@
-import bot.nat.sumi.Main;
-import bot.nat.sumi.Server;
-import bot.nat.sumi.Servers;
+import bot.nat.sumi.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.util.Arrays;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Minecraft implements Runnable {
-	public static Server srv;
+	public Server srv;
 	public final static String srvIP = "irc.badnik.net";
-	public final static String Chan =  "#bored";
+	public final static String Chan =  "#ducks";
 
-	public final static String IP = "localhost";
-	public final static short port = 25565;
-	public final static String nick = "IRC";
-	public final static String pass = "";
-	
-	public final static byte protocol = 47;
-	private static final int TIMEOUT = 5000;
+	public final static String folder = "B:\\mc\\";
+    public final static int JAVA_MAX = 1024;
+    private Process process;
 
-	private Socket conn;
-	private boolean KeepConnection = true;
+    private boolean run = true;
+    private BufferedWriter writer;
+    public ArrayList<String> players;
 
-	@Override
+    @Override
 	public void run() {
+        players = new ArrayList<>();
 		new Timer("GetServerMinecraft").schedule(new TimerTask() {
 			@Override
 			public void run() {
-				srv = Servers.get(IP);
-			}
-		}, 10);
-
-		connectLoop();
-		while(KeepConnection) {
-			chkConn();
-			if(chkAvailable()) {
-				parseMessage(readMessageFull());
-			}
-			
-			sleep(10);
-		}
-	}
-
-	/* perform handshake with the server */
-	private void handShake() {
-		send(PacketID.HandShake, new ByteHandler().add(protocol).add(IP).add(port).add((byte)2));
-
-		/* login */
-		send(PacketID.LoginStart, new ByteHandler().add(nick));
-	}
-
-	private void send(PacketID id, ByteHandler b) {
-		try {
-			byte[] s = b.form(id);
-			conn.getOutputStream().write(s);
-			System.out.println(":::Minecraft send: " + Arrays.toString(s));
-			System.out.println(":::Minecraft send: " + new String(s).replace("\0", ""));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void parseMessage(byte[] b) {
-		final ByteReader br = new ByteReader(b);
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (br.size() != 0) {
-					parse(br.extract(br.rmvvar()));
-                    sleep(1);
-				}
-			}
-
-			private void parse(ByteReader br) {
-				if (br.size() == 0) {
-					return;
-				}
-
-				try {
-                    System.out.print(": " + Integer.toHexString(br.var(0)[0]) + " ");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                while (srv == null) {
+                    sleep(5);
+                    srv = Servers.get(srvIP);
                 }
-
-                switch (br.rmvvar()){
-					case 0x00:
-				//		send(PacketID.KeepAlive, new ByteHandler().add(br.toArray()));
-				}
 			}
-		}, "MessageParserMinecraft").start();
-	}
-	
-	/* read next message */
-	private byte[] readMessageFull() {
-		ByteHandler b = new ByteHandler();
-		while(chkAvailable()){
-			byte[] in = new byte[512];
-			
-			try {
-				conn.getInputStream().read(in);
-				b.add(in);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return b.del0().toArray();
-	}
-	
-	/* check if anything would come */
-	private boolean chkAvailable() {
-		try {
-			return conn.getInputStream().available() != 0;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
-	/* check if connected */
-	private void chkConn() {
-		if(conn.isClosed()) {
-			connectLoop();
-		}
-	}
-	
-	/* attempt to create a connection */
-	private void connectLoop() {
-		while(!connect()){
-			System.out.println(":::Minecraft: Connection error. Trying again in 1 second");
-			sleep(1000);
-		}
+		}, 1);
 
-		handShake();
-	}
+        generateProcess();
 
-	/* connect to server */
-	private boolean connect() {
-		try {
-			conn = new Socket();
-			conn.connect(new InetSocketAddress(IP, port), TIMEOUT);
-			System.out.println(":::Minecraft: Successfully connected to "+ IP +" port "+ port);
-			return true;
+        /* get bufferedReader and BufferedWriter instances */
+        BufferedReader reader = new BufferedReader (new InputStreamReader(process.getInputStream()));
+        writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        String line;
+        try {
+            while((line = reader.readLine()) != null && run){
+                System.out.println(line);
 
-		return false;
-	}
+                if(line.endsWith(" joined the game")){
+                    send(Format.Color.YELLOW + line.split(": ")[1]);
+                    players.add(line.split(": ")[1].replace(" joined the game", ""));
 
-	/* wait for a time */
+                } else if(line.endsWith(" left the game")) {
+                    players.remove(line.split(": ")[1].replace(" left the game", ""));
+
+                } else if(line.contains("lost connection:")){
+                    send(Format.Color.YELLOW + line.split(": ")[1].split(" lost")[0] +" left the game: "+ line.split("TextComponent\\{text='")[1].split("', siblings")[0]);
+
+                } else if(line.contains("Can't keep up!")){
+                    send(Format.Color.RED + line.split("\\? ")[1]);
+
+                } else if(line.contains("INFO]: <")){
+                    if(!cmd(line.split("> ")[1], line.substring(line.indexOf('<') +1, line.indexOf('>')))) {
+                        send(line.split("\\] \\[Server thread/INFO\\]: ")[1]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        process = null;
+    }
+
+    private boolean cmd(String t, String person) {
+        if(t.startsWith(Main.cmd)){
+            switch (t.replace(Main.cmd, "")){
+                case "list":
+                    write("tellraw "+ person +" {text:\"\",color:\"white\",extra:["+ list() +"]}");
+                    break;
+
+                default:
+                    write("tellraw "+ person +" "+ help());
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private String list() {
+        String ret = "";
+
+        for(User u : srv.getUsers()){
+            ret += hover(u.name +" ", getString(u)) +",";
+        }
+
+        return ret.substring(0, ret.length() -1);
+    }
+
+    private String getString(User u) {
+        return u.userName +"@"+ u.ident +": "+ u.realName +"\\n"+
+                u.chanToString() +"\\n"+
+                "vars: isLoggedIn "+ u.isLoggedIn +"; isBotOp "+ u.isBotOp;
+    }
+
+    private String help() {
+        return "{text:\"Available commands: \",color:\"white\",extra:[" +
+                hover("list", "usage: $list\\nShows users in current IRC channel") +"]}";
+    }
+
+    private String hover(String name, String usage) {
+        return "{text:\""+ name +"\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ usage +"\"}}";
+    }
+
+    private void send(String s) {
+        if(srv != null){
+            srv.send("PRIVMSG "+ Chan +" :"+ s, "Minecraft");
+        }
+    }
+
+    private void generateProcess() {
+        while(process == null){
+            try {
+                process = Runtime.getRuntime().exec("java -Xmx" + JAVA_MAX + "M -jar " + folder + "minecraft_server.jar nogui");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void write(String text){
+        try {
+            writer.write(text);
+            writer.newLine();
+            writer.flush();
+            System.out.println("Minecraft write: "+ text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* wait for a time */
 	public static void sleep(int time) {
 		try {
 			Thread.sleep(time);
@@ -165,11 +146,9 @@ public class Minecraft implements Runnable {
 		}
 	}
 
-	@Override
-	public void finalize() throws Throwable {
-		super.finalize();
-		KeepConnection = false;
-		conn.close();
-		System.out.println(":::Minecraft: Connection closed.");
-	}
+    public void close() throws IOException, InterruptedException {
+        write("stop");
+        process.waitFor();
+        run = false;
+    }
 }

@@ -13,19 +13,21 @@ public class Main {
 	public static final String folder = "B:\\Java\\NatsumiBot2\\data\\";
 	public static final String cmd = "$";	// command prefix
 
-    private static ArrayList<Module> spec;
-    private static ArrayList<Module> modules;
+    public static ArrayList<Module> spec;
+    public static ArrayList<Module> modules;
 
-	public static void main(String[] arg){
-		loadChannels(loadJARs(new String[0]));
+	public static void main(String[] arg) throws MalformedURLException {
+        loadJARs();
+        spec = SpecialModules.r();
+		loadChannels();
 	}
 
-	private static void loadChannels(ArrayList<Module> mod) {
+	private static void loadChannels() {
 		File[] files = new File(folder +"connect/").listFiles();
 
 		for(File f : files != null ? files : new File[0]){
 			System.out.println(f.getAbsolutePath());
-			Servers.addServer(new Server(new ConfigFile(f.getAbsolutePath(), ConfigFile.READ, read(f)), mod));
+			Servers.addServer(new Server(new ConfigFile(f.getAbsolutePath(), ConfigFile.READ, read(f))));
 		}
 	}
 
@@ -61,38 +63,29 @@ public class Main {
 	}
 
 	/* load commands */
-	public static void loadJARs(String[] ex) throws MalformedURLException {
-        for(Module m : modules){
-            unload(m.jar);
+	public static void loadJARs() throws MalformedURLException {
+        if(modules != null) {
+            for (Module m : modules) {
+                assert m != null;
+                unload(m.jar);
+            }
         }
 
 		File[] files = new File(folder +"commands/").listFiles();
         modules = new ArrayList<>();
 
-		for(File f : files != null ? rmv(files, ex) : new File[0]){
+        assert files != null;
+        for(File f : files){
 			try {
 				loadJAR(f.getAbsolutePath());
-				modules.add(getInstance(f.getName().replace(".jar", ""), f.getAbsolutePath()));
+                Module m = getInstance(f.getName().replace(".jar", ""), f.getAbsolutePath());
+                m.jar = f.getAbsolutePath();
+				modules.add(m);
+
 			} catch (IOException | ClassNotFoundException | URISyntaxException e) {
 				e.printStackTrace();
 			}
         }
-	}
-
-	/* remove certain files from list */
-	private static File[] rmv(File[] files, String[] ex) {
-		ArrayList<File> list = new ArrayList<File>();
-		Collections.addAll(list, files);
-
-		for(String x : ex){
-			for(File f : list.toArray(new File[list.size()])){
-				if(f.getAbsolutePath().equals(x)){
-					list.remove(f);
-				}
-			}
-		}
-
-		return list.toArray(new File[list.size()]);
 	}
 
 	/* get new module instance */
@@ -111,9 +104,9 @@ public class Main {
 		System.out.print("loading Classes from '" + location +"'");
 
         /* list of class names */
-		ArrayList<String> classNames = new ArrayList<String>();
+		ArrayList<String> classNames = new ArrayList<>();
         /* list of configuration files */
-		ArrayList<String> configs = new ArrayList<String>();
+		ArrayList<String> configs = new ArrayList<>();
 
         /* get the JAR to this instance */
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(location));
@@ -169,7 +162,7 @@ public class Main {
 		ClassContainer.createNew(url.toArray(new URL[url.size()]));
 
         /* close all Closed modules */
-        for(Module m : modules){
+        for(Module m : modules.toArray(new Module[modules.size()])){
             if(m.jar.equals(jar)) {
                 if (m instanceof Closed) {
                     ((Closed) m).close();
@@ -184,7 +177,7 @@ public class Main {
 	}
 
 	public static ArrayList<URL> getURLs() {
-		ArrayList<URL> url = new ArrayList<URL>();
+		ArrayList<URL> url = new ArrayList<>();
 		Collections.addAll(url, ClassContainer.get().getURLs());
 		return url;
 	}

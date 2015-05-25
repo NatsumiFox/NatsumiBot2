@@ -45,7 +45,7 @@ public class mc extends Module implements Closed {
                 return;
 
             case "QUIT":
-                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\",color:\"white\",extra:[{text:\" quit the channel.\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ m.channel +" "+ m.text.replace(" :", "") +"\"}}]}");
+                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\",color:\"white\",extra:[{text:\" quit the channel.\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ m.channel.replace(":", "") + m.text +"\"}}]}");
                 return;
 
             case "NICK":
@@ -76,6 +76,15 @@ public class mc extends Module implements Closed {
                 }
                 return;
 
+            case "kick":
+                if(srv.getUser(m.author).isBotOp) {
+                    instance.write(s);
+
+                } else {
+                    srv.send(m.channel, m.author, "You are not permitted to do this!", m.channel);
+                }
+                return;
+
             default:
                 help("", m, srv);
         }
@@ -83,7 +92,7 @@ public class mc extends Module implements Closed {
 
     private void help(String h, Message m, Server srv) {
         if(h.equals("")){
-            srv.send(m.channel, m.author, "Available commands: help, list", m.channel);
+            srv.send(m.channel, m.author, "Available commands: help, list, raw, kick", m.channel);
             srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc help _command_", m.channel);
 
         } else {
@@ -102,8 +111,13 @@ public class mc extends Module implements Closed {
                     srv.send(m.channel, m.author, "Send raw command to the console", m.channel);
                     return;
 
+                case "kick":
+                    srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc raw _user_", m.channel);
+                    srv.send(m.channel, m.author, "Kick specified user from the server.", m.channel);
+                    return;
+
                 default:
-                    srv.send(m.channel, m.author, "Available commands: help, list, raw", m.channel);
+                    srv.send(m.channel, m.author, "Available commands: help, list, raw, kick", m.channel);
                     srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc help _command_", m.channel);
             }
         }

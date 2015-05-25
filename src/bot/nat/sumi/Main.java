@@ -173,7 +173,7 @@ public class Main {
         }
 
         for(Module m : spec.toArray(new Module[spec.size()])){
-            if(m.jar.equals(jar)) {
+            if(m.jar != null && m.jar.equals(jar)) {
                 if (m instanceof Closed) {
                     ((Closed) m).close();
                 }

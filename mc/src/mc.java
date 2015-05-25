@@ -17,17 +17,43 @@ public class mc extends Module implements Closed {
             }
         });
 		minecraft.start();
+
+        Main.spec.add(0, this);
 	}
 
 	@Override
 	public void command(Message m, Server srv) {
-        if(m.text.startsWith(Main.cmd +"mc")){
+        if(!m.type.equals("PRIVMSG")){
+            not(m, srv);
+
+        } else if(m.text.startsWith(Main.cmd + "mc")){
             cmd(m, srv);
 
         } else if(Minecraft.Chan.equals(m.channel)) {
             instance.write("tellraw @a {text:\"<" + m.author + "> " + m.text + "\",color:\"gray\",hoverEvent:{action:\"show_text\",value:\"" + m.channel + "\"}}");
         }
 	}
+
+    private void not(final Message m, Server srv) {
+        switch (m.type){
+            case "JOIN":
+                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ m.channel.replace(":", "") +"\"},extra:[{text:\" joined the channel.\",color:\"white\"}]}");
+                return;
+
+            case "PART":
+                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ m.channel +"\"},extra:[{text:\" left the channel.\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ m.text.replace(" :", "") +"\"}}]}");
+                return;
+
+            case "QUIT":
+                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\",color:\"white\",extra:[{text:\" quit the channel.\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ m.channel +" "+ m.text.replace(" :", "") +"\"}}]}");
+                return;
+
+            case "NICK":
+                User u = srv.getUser(SpecialModules.getUser(m.author));
+                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +" is now know as "+ m.channel +"!\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ instance.getString(u) +"\"}}");
+                return;
+        }
+    }
 
     private void cmd(Message m, Server srv) {
         String s = m.text.replace(Main.cmd +"mc ", "");

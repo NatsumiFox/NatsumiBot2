@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SpecialModules {
 
-	private static String getUser(String name) {
+	public static String getUser(String name) {
 		return name.split("!")[0].replace(":", "");
 	}
 
@@ -30,20 +30,20 @@ public class SpecialModules {
 		return new Module() {
 			@Override
 			public void command(Message m, final Server srv) {
-				if(m.text.split(" ").length < 2){
+				if(m.text.split(" ").length < 3){
 					return;
 				}
 
-				Chan c = srv.getUser(m.text.split(" ")[1]).getChan(m.channel);
+				Chan c = srv.getUser(m.text.split(" ")[2]).getChan(m.channel);
 				if(c == null){
 					return;
 				}
 
 				if(m.text.startsWith("+")){
-					c.addUserLevel(getLevel(m.text.split(" ")[0].replace("+", "")));
+					c.addUserLevel(getLevel(m.text.split(" ")[1].replace("+", "")));
 
 				} else if(m.text.startsWith("-")){
-					c.rmvUserLevel(getLevel(m.text.split(" ")[0].replace("-", "")));
+					c.rmvUserLevel(getLevel(m.text.split(" ")[1].replace("-", "")));
 				}
 			}
 
@@ -97,7 +97,7 @@ public class SpecialModules {
 			public void command(Message m, final Server srv) {
 				User u = srv.getUser(getUser(m.author));
 				if(u != null){
-					u.chan.remove(u.getChan(m.text.split(" ")[0]));
+					u.chan.remove(u.getChan(m.text.split(" :")[0]));
 
 					if(u.chan.size() == 0){
 						srv.rmvUser(getUser(m.author));
@@ -163,8 +163,8 @@ public class SpecialModules {
 		return new Module() {
 			@Override
 			public void command(Message m, final Server srv) {
-				srv.getUser(m.text.split(" ")[0]).isLoggedIn = true;
-				srv.getUser(m.text.split(" ")[0]).resolveBotOp(srv);
+				srv.getUser(m.text.split(" ")[1]).isLoggedIn = true;
+				srv.getUser(m.text.split(" ")[1]).resolveBotOp(srv);
 			}
 
 			@Override
@@ -178,9 +178,9 @@ public class SpecialModules {
 		return new Module() {
 			@Override
 			public void command(Message m, final Server srv) {
-				User u = srv.getUser(User.exUserMode(m.text.split(" ")[0]));
+				User u = srv.getUser(User.exUserMode(m.text.split(" ")[1]));
 
-				for(String s : m.text.replace(u.name +" :", "").split(" ")){
+				for(String s : m.text.replace(" "+ u.name +" :", "").split(" ")){
 					if(!chkContains(u, s)){
 						u.chan.add(new Chan(s));
 					}
@@ -189,7 +189,7 @@ public class SpecialModules {
 
 			private boolean chkContains(User u, String s) {
 				for(Chan c : u.chan){
-					if(s.equals(c.name)){
+					if(User.exUserMode(s).equals(c.name)){
 						return true;
 					}
 				}
@@ -208,10 +208,10 @@ public class SpecialModules {
 		return new Module() {
 			@Override
 			public void command(Message m, final Server srv) {
-				srv.addUser(new User(User.exUserMode(m.text.split(" ")[0])));
-				User u = srv.getUser(User.exUserMode(m.text.split(" ")[0]));
-				u.userName = m.text.split(" ")[1];
-				u.ident =    m.text.split(" ")[2];
+				srv.addUser(new User(User.exUserMode(m.text.split(" ")[1])));
+				User u = srv.getUser(User.exUserMode(m.text.split(" ")[1]));
+				u.userName = m.text.split(" ")[2];
+				u.ident =    m.text.split(" ")[3];
 				u.realName = m.text.split(":")[1];
 			}
 
@@ -227,7 +227,7 @@ public class SpecialModules {
 			@Override
 			public void command(Message m, final Server srv) {
 				/* load all users */
-				for(String u : m.text.replace("= "+ m.text.split(" ")[1] +" :", "").split(" ")){
+				for(String u : m.text.replace("= "+ m.text.split(" ")[2] +" :", "").split(" ")){
 					srv.addUser(new User(u));
 					srv.send("WHOIS "+ srv.IP +" "+ User.exUserMode(u), "");
 				}

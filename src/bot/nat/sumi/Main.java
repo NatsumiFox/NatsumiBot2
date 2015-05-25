@@ -17,8 +17,8 @@ public class Main {
     public static ArrayList<Module> modules;
 
 	public static void main(String[] arg) throws MalformedURLException {
-        loadJARs();
         spec = SpecialModules.r();
+        loadJARs();
 		loadChannels();
 	}
 
@@ -169,6 +169,16 @@ public class Main {
                 }
 
                 modules.remove(m);
+            }
+        }
+
+        for(Module m : spec.toArray(new Module[spec.size()])){
+            if(m.jar.equals(jar)) {
+                if (m instanceof Closed) {
+                    ((Closed) m).close();
+                }
+
+                spec.remove(m);
             }
         }
 

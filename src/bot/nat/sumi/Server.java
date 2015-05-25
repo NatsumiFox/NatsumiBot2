@@ -103,7 +103,7 @@ public class Server {
 				for(Module mod : Main.spec){
 					if(hasCommand(mod.reserved(), data[1])){
 						final Module run = mod;
-						final Message message = new Message(data[0], data[1], data[2], ln.replace(data[0] +" "+ data[1] +" "+ data[2] +" ", ""));
+						final Message message = new Message(data[0], data[1], data[2], ln.replace(data[0] +" "+ data[1] +" "+ data[2], ""));
 						final Server srv = this;
 
 						new Thread("server "+ IP +" <<<"){

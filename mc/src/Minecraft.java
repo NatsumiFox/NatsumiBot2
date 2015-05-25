@@ -95,7 +95,7 @@ public class Minecraft implements Runnable {
         return ret.substring(0, ret.length() -1);
     }
 
-    private String getString(User u) {
+    public String getString(User u) {
         return u.userName +"@"+ u.ident +": "+ u.realName +"\\n"+
                 u.chanToString() +"\\n"+
                 "vars: isLoggedIn "+ u.isLoggedIn +"; isBotOp "+ u.isBotOp;
@@ -147,8 +147,10 @@ public class Minecraft implements Runnable {
 	}
 
     public void close() throws IOException, InterruptedException {
-        write("stop");
-        process.waitFor();
-        run = false;
+        if(run) {
+            write("stop");
+            process.waitFor();
+            run = false;
+        }
     }
 }

@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="unnamed">
+    <output-path>$PROJECT_DIR$/data</output-path>
+    <root id="archive" name="spigot.jar">
+      <element id="dir-copy" path="$PROJECT_DIR$/out/production/MinecraftServer" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/data/mc.jar" path-in-jar="/" />
+      <element id="directory" name="bot">
+        <element id="directory" name="nat">
+          <element id="directory" name="sumi">
+            <element id="file-copy" path="$PROJECT_DIR$/out/production/NatsumiBot2/bot/nat/sumi/ConfigFile$Section.class" />
+            <element id="file-copy" path="$PROJECT_DIR$/out/production/NatsumiBot2/bot/nat/sumi/ConfigFile.class" />
+            <element id="file-copy" path="$PROJECT_DIR$/out/production/NatsumiBot2/bot/nat/sumi/ConfigFile$Field.class" />
+            <element id="file-copy" path="$PROJECT_DIR$/out/production/NatsumiBot2/bot/nat/sumi/Main.class" />
+          </element>
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

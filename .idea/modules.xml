@@ -2,9 +2,21 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MinecraftServer/MinecraftServer.iml" filepath="$PROJECT_DIR$/MinecraftServer/MinecraftServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/NatsumiBot2.iml" filepath="$PROJECT_DIR$/NatsumiBot2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/NatsumiBot21.iml" filepath="$PROJECT_DIR$/NatsumiBot21.iml" />
+      <module fileurl="file://$PROJECT_DIR$/botOP/botOP.iml" filepath="$PROJECT_DIR$/botOP/botOP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/date/date.iml" filepath="$PROJECT_DIR$/date/date.iml" />
+      <module fileurl="file://$PROJECT_DIR$/direct/direct.iml" filepath="$PROJECT_DIR$/direct/direct.iml" />
+      <module fileurl="file://$PROJECT_DIR$/essentials/essentials.iml" filepath="$PROJECT_DIR$/essentials/essentials.iml" />
+      <module fileurl="file://$PROJECT_DIR$/help/help.iml" filepath="$PROJECT_DIR$/help/help.iml" />
+      <module fileurl="file://$PROJECT_DIR$/listModules/listModules.iml" filepath="$PROJECT_DIR$/listModules/listModules.iml" />
+      <module fileurl="file://$PROJECT_DIR$/math/math.iml" filepath="$PROJECT_DIR$/math/math.iml" />
       <module fileurl="file://$PROJECT_DIR$/mc/mc.iml" filepath="$PROJECT_DIR$/mc/mc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/random/random.iml" filepath="$PROJECT_DIR$/random/random.iml" />
+      <module fileurl="file://$PROJECT_DIR$/reload/reload.iml" filepath="$PROJECT_DIR$/reload/reload.iml" />
+      <module fileurl="file://$PROJECT_DIR$/repo/repo.iml" filepath="$PROJECT_DIR$/repo/repo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user/user.iml" filepath="$PROJECT_DIR$/user/user.iml" />
     </modules>
   </component>
 </project>
+

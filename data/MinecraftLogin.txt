@@ -1,0 +1,28 @@
+#Green_Snake {
+	with: Natsumi
+	owner: Natsumi
+	pass: taskulamppu
+	requirepass: false
+	login: false
+}
+#ThomasThePencil {
+	with: Pencil
+	owner: Pencil
+	pass: Eraser
+	requirepass: false
+	login: false
+}
+#RoboLord {
+	with: Ralakimus
+	owner:  
+	pass: trentisshit
+	requirepass: false
+	login: false
+}
+#xNatieex3 {
+	with: xNatieex3
+	owner:  
+	pass: asoighiuh12aw8uASHsd
+	requirepass: false
+	login: false
+}

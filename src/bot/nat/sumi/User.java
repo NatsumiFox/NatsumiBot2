@@ -12,6 +12,7 @@ public class User {
 	public boolean isLoggedIn = false;
 	public boolean isBotOp = false;
 	public ArrayList<Chan> chan = new ArrayList<Chan>();
+	public String loggedInAs = null;
 
 	public User(String name) {
 		this.name = exUserMode(name);

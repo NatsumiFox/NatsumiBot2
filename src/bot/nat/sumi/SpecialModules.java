@@ -163,6 +163,7 @@ public class SpecialModules {
 		return new Module() {
 			@Override
 			public void command(Message m, final Server srv) {
+				srv.getUser(m.text.split(" ")[1]).loggedInAs = m.text.split(" ")[2];
 				srv.getUser(m.text.split(" ")[1]).isLoggedIn = true;
 				srv.getUser(m.text.split(" ")[1]).resolveBotOp(srv);
 			}
@@ -227,7 +228,7 @@ public class SpecialModules {
 			@Override
 			public void command(Message m, final Server srv) {
 				/* load all users */
-				for(String u : m.text.replace("= "+ m.text.split(" ")[2] +" :", "").split(" ")){
+				for(String u : m.text.replace(" = "+ m.text.split(" ")[2] +" :", "").split(" ")){
 					srv.addUser(new User(u));
 					srv.send("WHOIS "+ srv.IP +" "+ User.exUserMode(u), "");
 				}

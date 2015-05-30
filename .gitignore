@@ -57,3 +57,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+data/mc.IN
+data/mc.OUT
+data/__rzi_0.155
+launch.bat
+mcp/

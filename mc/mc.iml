@@ -8,6 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="bot" level="project" />
-    <orderEntry type="library" name="spigot" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="spigot" level="project" />
   </component>
 </module>

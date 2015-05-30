@@ -10,7 +10,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Main {
-	public static final String folder = "H:\\Java\\NatsumiBot2\\data\\";
+	public static final String folder = "B:\\Java\\NatsumiBot2\\data\\";
 	public static final String cmd = "$";	// command prefix
 
     public static ArrayList<Module> spec;

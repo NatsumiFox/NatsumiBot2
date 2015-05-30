@@ -91,7 +91,7 @@ public class Server {
 						t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 							@Override
 							public void uncaughtException(Thread t, Throwable e) {
-								send("PRIVMSG "+ t.getName().split(" ")[2] +" :"+ Format.BOLD + Format.Color.RED + e.toString(), "ERROR");
+								send("PRIVMSG "+ t.getName().split(" ")[2] +" :"+ Format.BOLD + Format.RED.i + e.toString(), "ERROR");
 								e.printStackTrace();
 							}
 						});

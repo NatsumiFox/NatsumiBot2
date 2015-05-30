@@ -13,12 +13,11 @@ public class Minecraft implements Runnable {
 	public final static String srvIP = "irc.badnik.net";
 	public final static String Chan =  "#ducks";
 
-	public final static String folder = "H:\\Minecraft\\bored\\";
+	public final static String folder = "B:\\mc\\";
     public final static int JAVA_MAX = 1024;
 	public Process pmc;
 
     public BufferedWriter writer;
-	private String line;
 	private String read = "";
 
     @Override
@@ -60,45 +59,64 @@ public class Minecraft implements Runnable {
 				    }
 			    }
 		    }
-	    }, "Minecrat I->I").start();
+	    }, "Minecraft I->I").start();
 
-        String tmp;
+        String tmp, line;
         try {
 	        while(pmc != null && pmc.isAlive()){
-		        if((line = reader.readLine()) != null) {
+				if((line = reader.readLine()) != null) {
 			        System.out.println(line);
 
-			        if (line.endsWith(" joined the game")) {
-				        send(Format.Color.YELLOW + line.split(": ")[1]);
-				        String name = line.split(": ")[1].replace(" joined the game", "");
+			        if (line.contains(" logged in")) {
+				        send(Format.YELLOW.i + line.split(": ")[1].split("\\[")[0] +" joined the game");
 
 			        } else if (line.contains("lost connection:") && !line.contains("com.mojang.authlib.GameProfile")) {
 				        String player = line.split("INFO\\]: ")[1].split(" lost connection:")[0];
-				        send(Format.Color.YELLOW + player + " left the game: " + line.split(player + " ")[1].split(", siblings")[0] + "}");
+				        send(Format.YELLOW.i + player + " left the game: " + line.split(player + " ")[1].split(", siblings")[0]);
 
 			        } else if (line.contains("Can't keep up!")) {
-				        send(Format.Color.RED + line.split("\\? ")[1]);
+				        send(Format.RED.i + line.split("\\? ")[1]);
 
 			        } else if (line.contains("INFO]: <")) {
-				        if (!cmd(line.split("> ")[1], line.substring(line.indexOf('<') + 1, line.indexOf('>')))) {
-					        send(line.split("INFO\\]: ")[1]);
+						String text = line.split("> ")[1], nick = line.substring(line.indexOf('<'), line.indexOf('>') - 1);
+						if (!cmd(nick, text)) {
+							MCToIRC(nick, text);
 				        }
 
+					} else if (line.contains("INFO]: * ")) {
+						String text = line.split("\\* ")[1], nick = text.split(" ")[0];
+						text = text.substring(nick.length() +1, text.length());
+
+						if (!cmd(nick, text)) {
+							MCToIRC("* "+ nick, text);
+						}
+
 			        } else if (line.contains("INFO]: Done (")) {
-				        send(Format.Color.GREEN +"Server started in "+ line.split("Done \\(")[1].split("\\)!")[0] +" to "+ mcIP +" "+ port_current);
+				        send(Format.DGREEN.i +"Server started in "+ line.split("Done \\(")[1].split("\\)!")[0] +" to "+ mcIP +":"+ port_current);
 
 			        } else if (line.contains("TPS from last")) {
-				        send(Format.Color.GREEN + line.split("INFO]: ")[1]);
+				        send(Format.DGREEN.i + line.split("INFO]: ")[1]);
 
 			        } else if ((tmp = isDeathMessage(line.substring(line.indexOf("INFO]: ") + 7, line.length()))) != null) {
-				        send(Format.Color.RED + tmp);
+				        send(Format.RED + tmp);
 			        }
 		        }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+		System.out.println(Main.folder +"spigot.jar " + pmc.exitValue());
     }
+
+	/* translate Minecraft chat to IRC chat */
+	private void MCToIRC(String nick, String text) {
+		for(Format f : Format.values()){
+			text = text.replace(f.c, f.i);
+		}
+
+		send(nick +' '+ text);
+	}
 
 	private String isDeathMessage(String line) {
         if(line.contains(" was shot by ") || line.contains(" was squashed ") || line.contains(" was burnt to a crisp ") ||
@@ -178,7 +196,7 @@ public class Minecraft implements Runnable {
         if(t.startsWith(Main.cmd)){
             switch (t.replace(Main.cmd, "")){
 	            case "list":
-		            write("tellraw " + person + " {text:\"\",color:\"white\",extra:[" + list() + "]}");
+		            write("tellraw " + person + " {text:\"\""+ Format.WHITE.j +",extra:[" + list() + "]}");
 		            break;
 
 	            default:
@@ -191,6 +209,11 @@ public class Minecraft implements Runnable {
         }
     }
 
+	private String help() {
+		return "{text:\"Available commands: \""+ Format.WHITE.j +",extra:[" +
+				hover("list", "usage: $list\\nShows users in current IRC channel") +"]}";
+	}
+
     private String list() {
         String ret = "";
 
@@ -202,20 +225,15 @@ public class Minecraft implements Runnable {
 
         return ret.substring(0, ret.length() -1);
     }
+	
+	private String hover(String name, String usage) {
+		return "{text:\""+ name +"\""+ Format.WHITE.j +",hoverEvent:{action:\"show_text\",value:\""+ usage +"\"}}";
+	}
 
-    public String getString(User u) {
+    public static String getString(User u) {
         return u.userName +"@"+ u.ident +": "+ u.realName +"\\n"+
                 u.chanToString() +"\\n"+
                 "vars: isLoggedIn "+ u.isLoggedIn +"; isBotOp "+ u.isBotOp;
-    }
-
-    private String help() {
-        return "{text:\"Available commands: \",color:\"white\",extra:[" +
-                hover("list", "usage: $list\\nShows users in current IRC channel") +"]}";
-    }
-
-    private String hover(String name, String usage) {
-        return "{text:\""+ name +"\",color:\"white\",hoverEvent:{action:\"show_text\",value:\""+ usage +"\"}}";
     }
 
     private void send(String s) {

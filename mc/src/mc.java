@@ -35,27 +35,116 @@ public class mc extends Module implements Closed {
             cmd(m, srv);
 
         } else if(Minecraft.Chan.equals(m.channel)) {
-            instance.write("tellraw @a {text:\"<" + m.author + "> " + m.text + "\",color:\"gray\",hoverEvent:{action:\"show_text\",value:\"" + m.channel + "\"}}");
-        }
+			IRCToMC(m);
+		}
 	}
 
-    private void not(final Message m, Server srv) {
+	private void IRCToMC(Message m) {
+		String cl = Format.GRAY.j, type = "", orig = m.text.replace("\"", "\\\""), ret = "tellraw @a {text:\"<"+ m.author +"> \"";
+
+		if(orig.contains("\001ACTION")){
+			orig = orig.replace("\001ACTION", "").replace("\001", "");
+			ret = "tellraw @a {text:\"* "+ m.author +"\"";
+		}
+
+		ret += Format.GRAY.j +",hoverEvent:{action:\"show_text\",value:\""+ Minecraft.getString(instance.srv.getUser(m.author)) +"\"},extra:[";
+
+		while(!orig.equals("")){
+			String add = "{text:\"";
+			int indx = Integer.MAX_VALUE, chk;
+			boolean normal = true, set = false;
+
+			for(Format f : Format.values()){
+				chk = orig.indexOf(f.i);
+
+				if(chk != -1 && chk < indx){
+					indx = chk;
+				}
+			}
+
+			if(((chk = orig.indexOf("http://")) != -1 && chk < indx) || ((chk = orig.indexOf("https://")) != -1 && chk < indx)){
+				indx = chk;
+			}
+
+			back:
+			if(indx != Integer.MAX_VALUE){
+				if(indx != 0){
+					add += orig.substring(0, indx) +"\"";
+					orig = orig.substring(indx, orig.length());
+
+				} else {
+					if(orig.startsWith("http://") || orig.startsWith("https://")){
+						normal = false;
+						int last = orig.indexOf(' ');
+						String url = orig.substring(0, last -1);
+
+						add += url +"\""+ cl + type + style("click", "open_url", url) + style("hover", "show_text", url.split("//")[1].split("/")[0]);
+						orig = orig.substring(last, orig.length());
+
+					} else {
+						for(Format f : Format.values()){
+							if(orig.startsWith(f.i)){
+								if(f.equals(Format.RESET)){
+									type = "";
+									cl = Format.GRAY.j;
+
+								} else if(f.icl){
+									type = f.j;
+
+								} else {
+									 cl = f.j;
+								}
+
+								orig = orig.substring(f.i.length(), orig.length());
+								add += orig.substring(0, indx) +"\"";
+								orig = orig.substring(indx, orig.length());
+								set = true;
+								break back;
+							}
+						}
+
+						orig = orig.substring(1, orig.length());
+					}
+				}
+
+			} else {
+				add += orig +"\"";
+				orig = "";
+			}
+
+
+			if(!set) {
+				if (normal) {
+					add += cl + type + style("hover", "show_text", m.channel) + "";
+				}
+				ret += add + "},";
+			}
+		}
+
+		instance.write(ret.substring(0, ret.length() -1) +"]}");
+	}
+
+	private String style(String type, String event, String text) {
+		return ","+ type +"Event:{action:\""+ event +"\",value:\"" + text + "\"}";
+	}
+
+	private void not(final Message m, Server srv) {
         switch (m.type){
             case "JOIN":
-                instance.write("tellraw @a {text:\"" + SpecialModules.getUser(m.author) + "\",color:\"yellow\",hoverEvent:{action:\"show_text\",value:\"" + m.channel.replace(":", "") + "\"},extra:[{text:\" joined the channel.\",color:\"yellow\"}]}");
+                instance.write("tellraw @a {text:\"" + SpecialModules.getUser(m.author) + "\""+ Format.YELLOW.j+",hoverEvent:{action:\"show_text\",value:\"" + m.channel.replace(":", "") + "\"},extra:[{text:\" joined the channel.\""+ Format.YELLOW.j+"}]}");
                 return;
 
             case "PART":
-                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\",color:\"yellow\",hoverEvent:{action:\"show_text\",value:\""+ m.channel +"\"},extra:[{text:\" left the channel.\",color:\"yellow\",hoverEvent:{action:\"show_text\",value:\""+ m.text.replace(" :", "") +"\"}}]}");
+                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\""+ Format.YELLOW.j+",hoverEvent:{action:\"show_text\",value:\""+ m.channel +"\"},extra:[{text:\" left the channel.\""+ Format.YELLOW.j+",hoverEvent:{action:\"show_text\",value:\""+ m.text.replace(" :", "") +"\"}}]}");
                 return;
 
             case "QUIT":
-                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\",color:\"yellow\",extra:[{text:\" quit the channel.\",color:\"yellow\",hoverEvent:{action:\"show_text\",value:\""+ m.channel.replace(":", "") + m.text +"\"}}]}");
+                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +"\""+ Format.YELLOW.j +",extra:[{text:\" quit the channel.\""+ Format.YELLOW.j+",hoverEvent:{action:\"show_text\",value:\""+ m.channel.replace(":", "") + m.text +"\"}}]}");
                 return;
 
             case "NICK":
-                User u = srv.getUser(SpecialModules.getUser(m.author));
-                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +" is now know as "+ m.channel +"!\",color:\"yellow\",hoverEvent:{action:\"show_text\",value:\""+ instance.getString(u) +"\"}}");
+                User u = srv.getUser(SpecialModules.getUser(m.channel));
+                instance.write("tellraw @a {text:\""+ SpecialModules.getUser(m.author) +" is now known as "+ m.channel +"!\""+ Format.YELLOW.j+",hoverEvent:{action:\"show_text\",value:\""+ Minecraft.getString(u) +"\"}}");
                 return;
         }
     }

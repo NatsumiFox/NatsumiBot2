@@ -53,7 +53,7 @@ public class Utils {
 
 	/* send text to server */
 	public static boolean send(Server srv, String channel, String user, String msg, String sender) {
-		return srv.send(channel, user, Format.Color.BROWN + msg, sender);
+		return srv.send(channel, user, Format.DRED.i + msg, sender);
 	}
 
 	/* gets file which contains user information */

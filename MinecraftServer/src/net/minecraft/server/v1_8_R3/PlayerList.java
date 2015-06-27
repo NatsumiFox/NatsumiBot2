@@ -419,7 +419,7 @@ public abstract class PlayerList {
         } else if (this.players.size() >= this.maxPlayers && !this.f(gameprofile)) {
             playerloginevent.disallow(Result.KICK_FULL, SpigotConfig.serverFullMessage);
 
-        } else if ((login = _MinecraftLogin.canLogin(gameprofile.getName())) != null) {
+        } else if ((login = _MinecraftLogin.canLogin(gameprofile.getName(), socketaddress)) != null) {
 	        playerloginevent.disallow(Result.KICK_OTHER, login);
         }
 

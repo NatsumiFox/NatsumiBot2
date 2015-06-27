@@ -259,10 +259,6 @@ public class LoginListener implements PacketLoginInListener, IUpdatePlayerListBo
                         craftserver.getPluginManager().callEvent(playerpreloginevent);
                         return playerpreloginevent.getResult();
                     }
-
-                    protected Object evaluate() {
-                        return this.evaluate();
-                    }
                 };
 
                 LoginListener.this.server.processQueue.add(waitable);

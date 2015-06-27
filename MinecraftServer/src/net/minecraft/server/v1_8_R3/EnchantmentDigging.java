@@ -16,7 +16,7 @@ public class EnchantmentDigging extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 5;
+        return 8;
     }
 
     public boolean canEnchant(ItemStack itemstack) {

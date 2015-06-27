@@ -4,6 +4,7 @@
 	pass: taskulamppu
 	requirepass: false
 	login: false
+	ip:   85.217.124.99
 }
 #ThomasThePencil {
 	with: Pencil
@@ -25,4 +26,82 @@
 	pass: asoighiuh12aw8uASHsd
 	requirepass: false
 	login: false
+}
+#jakarta2 {
+	with: Clefable
+	owner: Clefable
+	pass:  
+	requirepass: false
+	login: false
+	ip:  96.255.185.16
+}
+#XDPokemonLOL {
+	with: Clefable
+	owner: Clefable
+	pass:  
+	requirepass: false
+	login: false
+}
+#F_I_S_H {
+	with: Clefable
+	owner: Clefable
+	pass:  
+	requirepass: false
+	login: true
+}
+#B_E_N {
+	with: Clefable
+	owner: Clefable
+	pass:  
+	requirepass: false
+	login: false
+}
+#emylee {
+	with: Clefable
+	owner: Clefable
+	pass:  
+	requirepass: false
+	login: true
+	ip:  96.255.185.16
+}
+#goku818 {
+	with: Clefable
+	owner: Clefable
+	pass:  
+	requirepass: false
+	login: true
+}
+#Goku818 {
+	with: Clefable
+	owner: Clefable
+	pass:  
+	requirepass: false
+	login: false
+}
+#Goku {
+	with: Clefable
+	owner: Clefable
+	requirepass: false
+	login: false
+}
+#Slendermode {
+	with: Clefable
+	owner: Clefable
+	pass:  
+	requirepass: false
+	login: false
+}
+#Eldegar94 {
+	with: Natsumi
+	owner: Natsumi
+	requirepass: false
+	login: false
+	ip:  2.37.189.191
+}
+#Cynro96 {
+	with: Natsumi
+	owner: Natsumi
+	requirepass: false
+	login: false
+	ip:  79.23.241.143
 }

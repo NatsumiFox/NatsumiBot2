@@ -12,10 +12,10 @@ public class EnchantmentDepthStrider extends Enchantment {
     }
 
     public int b(int i) {
-        return this.a(i) + 15;
+        return this.a(i) + 25;
     }
 
     public int getMaxLevel() {
-        return 3;
+        return 8;
     }
 }

@@ -1,6 +1,10 @@
 import bot.nat.sumi.*;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public class Minecraft implements Runnable {
@@ -13,7 +17,7 @@ public class Minecraft implements Runnable {
 	public final static String srvIP = "irc.badnik.net";
 	public final static String Chan =  "#ducks";
 
-	public final static String folder = "B:\\mc\\";
+	public final static String folder = "H:\\Minecraft\\bored";
     public final static int JAVA_MAX = 1024;
 	public Process pmc;
 
@@ -38,7 +42,7 @@ public class Minecraft implements Runnable {
 	    } catch (IOException e) {
 		    e.printStackTrace();
 	    }
-	    sleep(50);
+	    sleep(100);
 
         /* get bufferedReader and BufferedWriter instances */
 	    BufferedReader reader = new BufferedReader (new InputStreamReader(pmc.getInputStream()));
@@ -67,10 +71,15 @@ public class Minecraft implements Runnable {
 				if((line = reader.readLine()) != null) {
 			        System.out.println(line);
 
-			        if (line.contains(" logged in")) {
+					if(line.contains("com.mojang.authlib.GameProfile") && line.contains("lost connection: ")) {
+						send(Format.RED.i + line.split("name=")[1].split(",properties=")[0] + " failed to connect: " + line.split("lost connection: ")[1]);
+
+					} else if(line.contains("com.mojang.authlib.GameProfile") && line.contains("Disconnecting")){
+
+					} else if (line.contains(" logged in")) {
 				        send(Format.YELLOW.i + line.split(": ")[1].split("\\[")[0] +" joined the game");
 
-			        } else if (line.contains("lost connection:") && !line.contains("com.mojang.authlib.GameProfile")) {
+			        } else if (line.contains("lost connection:")) {
 				        String player = line.split("INFO\\]: ")[1].split(" lost connection:")[0];
 				        send(Format.YELLOW.i + player + " left the game: " + line.split(player + " ")[1].split(", siblings")[0]);
 
@@ -78,18 +87,15 @@ public class Minecraft implements Runnable {
 				        send(Format.RED.i + line.split("\\? ")[1]);
 
 			        } else if (line.contains("INFO]: <")) {
-						String text = line.split("> ")[1], nick = line.substring(line.indexOf('<'), line.indexOf('>') - 1);
-						if (!cmd(nick, text)) {
+						String text = line.split("> ")[1], nick = line.substring(line.indexOf('<'), line.indexOf('>') + 1);
+						if (!cmd(nick.substring(1, nick.length() -1), text)) {
 							MCToIRC(nick, text);
 				        }
 
 					} else if (line.contains("INFO]: * ")) {
 						String text = line.split("\\* ")[1], nick = text.split(" ")[0];
 						text = text.substring(nick.length() +1, text.length());
-
-						if (!cmd(nick, text)) {
-							MCToIRC("* "+ nick, text);
-						}
+						MCToIRC("* "+ nick, text);
 
 			        } else if (line.contains("INFO]: Done (")) {
 				        send(Format.DGREEN.i +"Server started in "+ line.split("Done \\(")[1].split("\\)!")[0] +" to "+ mcIP +":"+ port_current);
@@ -98,7 +104,7 @@ public class Minecraft implements Runnable {
 				        send(Format.DGREEN.i + line.split("INFO]: ")[1]);
 
 			        } else if ((tmp = isDeathMessage(line.substring(line.indexOf("INFO]: ") + 7, line.length()))) != null) {
-				        send(Format.RED + tmp);
+				        send(Format.RED.i + tmp);
 			        }
 		        }
             }
@@ -106,7 +112,7 @@ public class Minecraft implements Runnable {
             e.printStackTrace();
         }
 
-		System.out.println(Main.folder +"spigot.jar " + pmc.exitValue());
+		System.err.println("Closing: " + Main.folder + "spigot.jar " + pmc.exitValue());
     }
 
 	/* translate Minecraft chat to IRC chat */
@@ -192,12 +198,16 @@ public class Minecraft implements Runnable {
         return null;
     }
 
-    private boolean cmd(String t, String person) {
+    private boolean cmd(String person, String t) {
         if(t.startsWith(Main.cmd)){
-            switch (t.replace(Main.cmd, "")){
+            switch (t.split(" ")[0].replace(Main.cmd, "")){
 	            case "list":
 		            write("tellraw " + person + " {text:\"\""+ Format.WHITE.j +",extra:[" + list() + "]}");
 		            break;
+
+	            case "difficulty":
+		            write("tellraw @a {text:\""+ difficulty(t.replace(Main.cmd + "difficulty", "").replace(" ", "")) +"}");
+					break;
 
 	            default:
                     write("tellraw "+ person +" "+ help());
@@ -209,9 +219,84 @@ public class Minecraft implements Runnable {
         }
     }
 
+	private String difficulty(String d) {
+		switch (d){
+			case "":
+				return diffCfg().getField("d").getValue();
+
+			case "3":case "h":
+				return difficulty0("hard", "3");
+
+			case "4":case "s":
+				return difficulty0("superhard", "4");
+
+			case "0":case "p":
+				return difficultyp();
+		}
+
+		return "invalid Symbol '"+ d +"'!\""+ Format.RED.j;
+	}
+
+	final int minTime = 2*60*1000;
+	private String difficulty0(String mode, String num) {
+		ConfigFile cfg = diffCfg();
+
+		if(cfg.containsField("time") && Long.parseLong(cfg.getField("time").getValue()) + minTime > System.currentTimeMillis()){
+			return "Cannot change mode: Not enough time has passed since last change! 2 minutes required!\""+ Format.RED.j;
+		}
+
+		if(cfg.containsField("mode") && cfg.getField("mode").getValue().equals(mode)){
+			return "Already in this mode!\""+ Format.RED.j;
+		}
+
+		try {
+			copyFile(new File(Main.folder + "spigot.yml" + num), new File(folder +"\\spigot.yml"));
+			copyFile(new File(Main.folder + "bukkit.yml" + num), new File(folder + "\\bukkit.yml"));
+			copyFile(new File(Main.folder + "hp.yml" + num), new File(folder + "\\plugins\\HarderPigmen\\config.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "Failed to change mode!\""+ Format.RED.j;
+		}
+
+
+		cfg.setField("time", System.currentTimeMillis() +"");
+		cfg.setField("mode", mode);
+		cfg.flush();
+
+		write("reload");
+		return "Successfully changed mode to "+ mode +"!\""+ Format.GREEN.j;
+	}
+
+	private String difficultyp() {
+		ConfigFile cfg = diffCfg();
+
+		if(cfg.containsField("time") && Long.parseLong(cfg.getField("time").getValue()) + minTime > System.currentTimeMillis()){
+			return "Cannot change mode: Not enough time has passed since last change! 2 minutes required!\""+ Format.RED.j;
+		}
+
+		write("difficulty 0");
+
+		new Timer("DifficultyTimer").schedule(new TimerTask() {
+			@Override
+			public void run() {
+				write("difficulty 3");
+			}
+		}, 5 * 1000);
+
+
+		cfg.setField("time", System.currentTimeMillis() +"");
+		cfg.flush();
+		return "Difficulty set to peaceful for 5 seconds!\""+ Format.GREEN.j;
+	}
+
+	private ConfigFile diffCfg() {
+		return new ConfigFile(new File(Main.folder +"difficulty.txt"), ConfigFile.READ | ConfigFile.WRITE);
+	}
+
 	private String help() {
 		return "{text:\"Available commands: \""+ Format.WHITE.j +",extra:[" +
-				hover("list", "usage: $list\\nShows users in current IRC channel") +"]}";
+				hover("list ", "usage: $list\\nShows users in current IRC channel") +","+
+				hover("difficulty ", "usage: difficulty\\nChanges between hard or superhard difficulty\\nValid values are 3, 4, h and s") +"]}";
 	}
 
     private String list() {
@@ -231,6 +316,8 @@ public class Minecraft implements Runnable {
 	}
 
     public static String getString(User u) {
+	    if(u == null) return null;
+
         return u.userName +"@"+ u.ident +": "+ u.realName +"\\n"+
                 u.chanToString() +"\\n"+
                 "vars: isLoggedIn "+ u.isLoggedIn +"; isBotOp "+ u.isBotOp;
@@ -275,6 +362,10 @@ public class Minecraft implements Runnable {
 
 		    } catch (IOException e) {
 			    e.printStackTrace();
+
+			    if(pmc != null && pmc.isAlive()){
+				    writer = new BufferedWriter(new OutputStreamWriter(pmc.getOutputStream()));
+			    }
 		    }
 	    }
     }
@@ -292,6 +383,29 @@ public class Minecraft implements Runnable {
 		if (pmc != null && pmc.isAlive()) {
 			write("stop");
 			pmc.waitFor();
+		}
+	}
+
+	public static void copyFile(File sourceFile, File destFile) throws IOException {
+		if(!destFile.exists()) {
+			destFile.createNewFile();
+		}
+
+		FileChannel source = null;
+		FileChannel destination = null;
+
+		try {
+			source = new FileInputStream(sourceFile).getChannel();
+			destination = new FileOutputStream(destFile).getChannel();
+			destination.transferFrom(source, 0, source.size());
+		}
+		finally {
+			if(source != null) {
+				source.close();
+			}
+			if(destination != null) {
+				destination.close();
+			}
 		}
 	}
 }

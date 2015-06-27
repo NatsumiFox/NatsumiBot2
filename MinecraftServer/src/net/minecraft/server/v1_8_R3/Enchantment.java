@@ -8,7 +8,7 @@ import java.util.Set;
 import org.bukkit.craftbukkit.v1_8_R3.enchantments.CraftEnchantment;
 
 public abstract class Enchantment {
-
+    public static final float multiple = 1.5f;
     private static final Enchantment[] byId = new Enchantment[256];
     public static final Enchantment[] b;
     private static final Map<MinecraftKey, Enchantment> E = Maps.newHashMap();
@@ -95,10 +95,16 @@ public abstract class Enchantment {
         return 1;
     }
 
+    /**
+     * Returns the minimal value of enchantability needed on the enchantment level passed.
+     */
     public int a(int i) {
         return 1 + i * 10;
     }
 
+    /**
+     * Returns the maximum value of enchantability nedded on the enchantment level passed.
+     */
     public int b(int i) {
         return this.a(i) + 5;
     }

@@ -1,0 +1,6 @@
+# See http://dev.bukkit.org/bukkit-plugins/harder-pigmen/ for configuration help!
+enableAnger: true
+changeSpeed: 2
+enableSwordChance: true
+swordChance: 5
+configVer: 2

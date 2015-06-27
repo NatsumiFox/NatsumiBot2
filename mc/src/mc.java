@@ -76,7 +76,11 @@ public class mc extends Module implements Closed {
 					if(orig.startsWith("http://") || orig.startsWith("https://")){
 						normal = false;
 						int last = orig.indexOf(' ');
-						String url = orig.substring(0, last -1);
+						if(last <= 0){
+							last = orig.length();
+						}
+
+						String url = orig.substring(0, last);
 
 						add += url +"\""+ cl + type + style("click", "open_url", url) + style("hover", "show_text", url.split("//")[1].split("/")[0]);
 						orig = orig.substring(last, orig.length());
@@ -152,15 +156,10 @@ public class mc extends Module implements Closed {
     private void cmd(Message m, Server srv) {
         String s = m.text.replace(Main.cmd +"mc ", "");
 
-        switch (s.split(" ")[0]){
+        switch (s.split(" ")[0].split(":")[0]){
             case "help":
                 help(s.replace("help", "").replace(" ", ""), m, srv);
                 return;
-
-	        case "ip":
-		        /* R() in MinecraftServer is getPort() */
-		    //    srv.send(m.channel, m.author, Minecraft.mcIP + ":" + instance.mc.R(), m.channel);
-		        return;
 
             case "list":
                 srv.send(m.channel, m.author, resolvePlayers(), m.channel);
@@ -204,6 +203,10 @@ public class mc extends Module implements Closed {
 
 	        case "login":
 		        srv.send(m.channel, m.author, _MinecraftLogin.login(s, m.author, srv), m.channel);
+		        return;
+
+	        case "ip":
+		        srv.send(m.channel, m.author, _MinecraftLogin.ip(s, m.author, srv), m.channel);
 		        return;
 
 	        case "ghost":
@@ -264,11 +267,6 @@ public class mc extends Module implements Closed {
 		            srv.send(m.channel, m.author, "Tells more about user on target server", m.channel);
 		            return;
 
-	            case "ip":
-		            srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc ip", m.channel);
-		            srv.send(m.channel, m.author, "Tells the currently used IP on the server", m.channel);
-		            return;
-
                 case "raw":
                     srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc raw _command_", m.channel);
                     srv.send(m.channel, m.author, "Send raw command to the console", m.channel);
@@ -286,13 +284,19 @@ public class mc extends Module implements Closed {
 		            return;
 
 	            case "login":
-		            srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc login [password]", m.channel);
-		            srv.send(m.channel, m.author, "Allow to login to Minecraft server once. NOTE: Password may be required!", m.channel);
+		            srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc login:[nick] [password]", m.channel);
+		            srv.send(m.channel, m.author, "Allow to login to Minecraft server once. :[nick] can be specified to target specified user (if valid). NOTE: Password may be required!", m.channel);
 		            return;
 
 	            case "ghost":
-		            srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc ghost [password]", m.channel);
-		            srv.send(m.channel, m.author, "Kicks user using your account. NOTE: Password may be required!", m.channel);
+		            srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc ghost:[nick] [password]", m.channel);
+		            srv.send(m.channel, m.author, "Kicks user using your account. :[nick] can be specified to target specified user (if valid). NOTE: Password may be required!", m.channel);
+		            return;
+
+	            case "ip":
+		            srv.send(m.channel, m.author, "Usage: "+ Main.cmd +"mc ip:[nick] _mode_ _ip_ [password]", m.channel);
+		            srv.send(m.channel, m.author, "modifies IP to whitelisted IP's list. _mode_ is either; 'add', 'rmv'. _ip_ is your specific IP you'd like to modify. " +
+				            ":[nick] can be specified to target specified user (if valid). NOTE: Password may be required!", m.channel);
 		            return;
 
                 default:

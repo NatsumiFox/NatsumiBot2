@@ -26,7 +26,7 @@ public class EnchantmentProtection extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 4;
+        return 8;
     }
 
     public int a(int i, DamageSource damagesource) {

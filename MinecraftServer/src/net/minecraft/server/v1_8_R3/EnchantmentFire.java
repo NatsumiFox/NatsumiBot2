@@ -16,6 +16,6 @@ public class EnchantmentFire extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 2;
+        return 5;
     }
 }

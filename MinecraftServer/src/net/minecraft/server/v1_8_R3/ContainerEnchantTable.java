@@ -368,8 +368,4 @@ public class ContainerEnchantTable extends Container {
             return this.bukkitEntity;
         }
     }
-
-    public InventoryView getBukkitView() {
-        return this.getBukkitView();
-    }
 }

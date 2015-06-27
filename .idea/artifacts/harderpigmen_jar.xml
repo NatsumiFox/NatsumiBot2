@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="harderpigmen:jar">
+    <output-path>H:/Minecraft/bored/plugins</output-path>
+    <root id="archive" name="harderpigmen.jar">
+      <element id="module-output" name="harderpigmen" />
+      <element id="dir-copy" path="$PROJECT_DIR$/plugins/harderpigmen/d" />
+    </root>
+  </artifact>
+</component>

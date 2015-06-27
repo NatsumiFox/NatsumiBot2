@@ -8,11 +8,11 @@ public class EnchantmentInfiniteArrows extends Enchantment {
     }
 
     public int a(int i) {
-        return 20;
+        return 26;
     }
 
     public int b(int i) {
-        return 50;
+        return 80;
     }
 
     public int getMaxLevel() {

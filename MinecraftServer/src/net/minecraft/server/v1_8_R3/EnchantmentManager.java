@@ -210,6 +210,10 @@ public class EnchantmentManager {
         return getEnchantmentLevel(Enchantment.SILK_TOUCH.id, entityliving.bA()) > 0;
     }
 
+    public static boolean hasSilkTouchEnchantment3(EntityLiving entityliving) {
+        return getEnchantmentLevel(Enchantment.SILK_TOUCH.id, entityliving.bA()) >= 3;
+    }
+
     public static int getBonusBlockLootEnchantmentLevel(EntityLiving entityliving) {
         return getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS.id, entityliving.bA());
     }
@@ -298,7 +302,7 @@ public class EnchantmentManager {
             j = 1 + random.nextInt((j >> 1) + 1) + random.nextInt((j >> 1) + 1);
             int k = j + i;
             float f = (random.nextFloat() + random.nextFloat() - 1.0F) * 0.15F;
-            int l = (int) ((float) k * (1.0F + f) + 0.5F);
+            int l = (int) ((float) k * (Enchantment.multiple + f) + 0.5F);
 
             if (l < 1) {
                 l = 1;
@@ -314,7 +318,7 @@ public class EnchantmentManager {
                     arraylist = Lists.newArrayList();
                     arraylist.add(weightedrandomenchant);
 
-                    for (int i1 = l; random.nextInt(50) <= i1; i1 >>= 1) {
+                    for (int i1 = l; random.nextInt(80) <= i1; i1 >>= 1) {
                         Iterator iterator = map.keySet().iterator();
 
                         while (iterator.hasNext()) {

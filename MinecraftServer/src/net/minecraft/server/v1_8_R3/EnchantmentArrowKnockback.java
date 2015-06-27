@@ -16,6 +16,6 @@ public class EnchantmentArrowKnockback extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 2;
+        return 25;
     }
 }

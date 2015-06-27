@@ -3,6 +3,10 @@ import bot.nat.sumi.Message;
 import bot.nat.sumi.Module;
 import bot.nat.sumi.Server;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+
 public class reload extends Module {
 	@Override
 	public void command(Message m, Server srv) {
@@ -12,8 +16,14 @@ public class reload extends Module {
 		}
 
 		if(m.text.startsWith("$reload")){
-			srv.reloadModules();
-			srv.send(m.channel, m.author, "Reload complete!", m.channel);
+			try {
+				Main.reload(Main.folder +"commands\\"+ m.text.split(" ")[1].replace(".jar", "") +".jar");
+				srv.send(m.channel, m.author, "Successfully reloaded '"+ m.text.split(" ")[1].replace(".jar", "") +".jar'", m.channel);
+
+			} catch (URISyntaxException | ClassNotFoundException | IOException e) {
+				e.printStackTrace();
+				srv.send(m.channel, m.author, "failed to reload '"+ m.text.split(" ")[1].replace(".jar", "") +".jar'", m.channel);
+			}
 
 		} else {
 			if(srv.unload(Main.folder +"commands\\"+ m.text.split(" ")[1].replace(".jar", "") +".jar")){

@@ -22,7 +22,7 @@ public class EnchantmentWeaponDamage extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 5;
+        return 8;
     }
 
     public float a(int i, EnumMonsterType enummonstertype) {

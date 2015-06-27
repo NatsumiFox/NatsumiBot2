@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="html:jar">
+    <output-path>$PROJECT_DIR$/data/commands</output-path>
+    <root id="archive" name="html.jar">
+      <element id="module-output" name="html" />
+    </root>
+  </artifact>
+</component>

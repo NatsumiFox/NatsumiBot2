@@ -15,15 +15,15 @@ public class EnchantmentLootBonus extends Enchantment {
     }
 
     public int a(int i) {
-        return 15 + (i - 1) * 9;
+        return 10 + (i - 1) * 9;
     }
 
     public int b(int i) {
-        return super.a(i) + 50;
+        return super.a(i) + 70;
     }
 
     public int getMaxLevel() {
-        return 3;
+        return 8;
     }
 
     public boolean a(Enchantment enchantment) {

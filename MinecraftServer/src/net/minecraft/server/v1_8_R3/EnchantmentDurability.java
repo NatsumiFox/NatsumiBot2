@@ -18,7 +18,7 @@ public class EnchantmentDurability extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 3;
+        return 8;
     }
 
     public boolean canEnchant(ItemStack itemstack) {

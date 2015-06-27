@@ -268,17 +268,6 @@ public class ContainerAnvil extends Container {
             }
 
             this.a = j + i;
-            if (i <= 0) {
-                itemstack1 = null;
-            }
-
-            if (b1 == i && b1 > 0 && this.a >= 40) {
-                this.a = 39;
-            }
-
-            if (this.a >= 40 && !this.m.abilities.canInstantlyBuild) {
-                itemstack1 = null;
-            }
 
             if (itemstack1 != null) {
                 k = itemstack1.getRepairCost();
@@ -286,7 +275,7 @@ public class ContainerAnvil extends Container {
                     k = itemstack2.getRepairCost();
                 }
 
-                k = k * 2 + 1;
+                k = (int) (k * 1.3 + 1);
                 itemstack1.setRepairCost(k);
                 EnchantmentManager.a(map, itemstack1);
             }
@@ -382,9 +371,5 @@ public class ContainerAnvil extends Container {
             this.bukkitEntity = new CraftInventoryView(this.player.player.getBukkitEntity(), craftinventoryanvil, this);
             return this.bukkitEntity;
         }
-    }
-
-    public InventoryView getBukkitView() {
-        return this.getBukkitView();
     }
 }

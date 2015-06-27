@@ -16,6 +16,6 @@ public class EnchantmentArrowDamage extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 5;
+        return 8;
     }
 }

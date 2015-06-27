@@ -8,7 +8,9 @@
       <module fileurl="file://$PROJECT_DIR$/date/date.iml" filepath="$PROJECT_DIR$/date/date.iml" />
       <module fileurl="file://$PROJECT_DIR$/direct/direct.iml" filepath="$PROJECT_DIR$/direct/direct.iml" />
       <module fileurl="file://$PROJECT_DIR$/essentials/essentials.iml" filepath="$PROJECT_DIR$/essentials/essentials.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/harderpigmen/harderpigmen.iml" filepath="$PROJECT_DIR$/plugins/harderpigmen/harderpigmen.iml" />
       <module fileurl="file://$PROJECT_DIR$/help/help.iml" filepath="$PROJECT_DIR$/help/help.iml" />
+      <module fileurl="file://$PROJECT_DIR$/html/html.iml" filepath="$PROJECT_DIR$/html/html.iml" />
       <module fileurl="file://$PROJECT_DIR$/listModules/listModules.iml" filepath="$PROJECT_DIR$/listModules/listModules.iml" />
       <module fileurl="file://$PROJECT_DIR$/math/math.iml" filepath="$PROJECT_DIR$/math/math.iml" />
       <module fileurl="file://$PROJECT_DIR$/mc/mc.iml" filepath="$PROJECT_DIR$/mc/mc.iml" />
@@ -19,4 +21,3 @@
     </modules>
   </component>
 </project>
-

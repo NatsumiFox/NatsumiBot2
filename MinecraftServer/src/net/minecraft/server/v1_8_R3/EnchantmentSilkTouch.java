@@ -8,15 +8,15 @@ public class EnchantmentSilkTouch extends Enchantment {
     }
 
     public int a(int i) {
-        return 15;
+        return 20;
     }
 
     public int b(int i) {
-        return super.a(i) + 50;
+        return super.a(i) + 80;
     }
 
     public int getMaxLevel() {
-        return 1;
+        return 3;
     }
 
     public boolean a(Enchantment enchantment) {

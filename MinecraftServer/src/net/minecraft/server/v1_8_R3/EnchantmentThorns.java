@@ -18,7 +18,7 @@ public class EnchantmentThorns extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 3;
+        return 5;
     }
 
     public boolean canEnchant(ItemStack itemstack) {

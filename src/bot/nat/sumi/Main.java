@@ -10,7 +10,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Main {
-	public static final String folder = "B:\\Java\\NatsumiBot2\\data\\";
+	public static final String folder = "H:\\Java\\NatsumiBot2\\data\\";
 	public static final String cmd = "$";	// command prefix
 
     public static ArrayList<Module> spec;
@@ -185,6 +185,39 @@ public class Main {
 
 		/* perform garbage collection */
 		System.gc();
+	}
+
+	public static void reload(String jar) throws IOException, URISyntaxException, ClassNotFoundException {
+		File f = new File(jar);
+
+        /* close all Closed modules */
+		for(Module m : modules.toArray(new Module[modules.size()])){
+			if(m.jar.equals(jar)) {
+				if (m instanceof Closed) {
+					((Closed) m).close();
+				}
+
+				modules.remove(m);
+			}
+		}
+
+		for(Module m : spec.toArray(new Module[spec.size()])){
+			if(m.jar != null && m.jar.equals(jar)) {
+				if (m instanceof Closed) {
+					((Closed) m).close();
+				}
+
+				spec.remove(m);
+			}
+		}
+
+		/* perform garbage collection */
+		System.gc();
+
+		loadJAR(f.getAbsolutePath());
+		Module m = getInstance(f.getName().replace(".jar", ""), f.getAbsolutePath());
+		m.jar = f.getAbsolutePath();
+		modules.add(m);
 	}
 
 	public static ArrayList<URL> getURLs() {

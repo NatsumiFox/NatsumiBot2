@@ -52,6 +52,14 @@ public class math extends Module {
 			}
 		}
 
+		while(math.indexOf('.') != -1 && math.indexOf('.') < math.lastIndexOf('0')) {
+			math = math.substring(0, math.length() -1);
+		}
+
+		if(math.endsWith(".")){
+			math = math.substring(0, math.length() -1);
+		}
+
 		if(math.length() > 256){
 			srv.send(m.channel, m.author, "too long to display or ∞ (Infinity)", m.channel);
 

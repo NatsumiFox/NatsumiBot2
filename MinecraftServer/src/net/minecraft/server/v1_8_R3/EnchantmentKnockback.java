@@ -16,6 +16,6 @@ public class EnchantmentKnockback extends Enchantment {
     }
 
     public int getMaxLevel() {
-        return 2;
+        return 5;
     }
 }

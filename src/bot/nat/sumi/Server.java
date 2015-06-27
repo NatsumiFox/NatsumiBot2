@@ -88,12 +88,9 @@ public class Server {
 								run.command(message, srv);
 							}
 						};
-						t.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-							@Override
-							public void uncaughtException(Thread t, Throwable e) {
-								send("PRIVMSG "+ t.getName().split(" ")[2] +" :"+ Format.BOLD + Format.RED.i + e.toString(), "ERROR");
-								e.printStackTrace();
-							}
+						t.setUncaughtExceptionHandler((t1, e) -> {
+							send("PRIVMSG "+ t1.getName().split(" ")[2] +" :"+ Format.BOLD.i + Format.RED.i + e.toString(), "ERROR");
+							e.printStackTrace();
 						});
 						t.start();
 					}
@@ -316,16 +313,6 @@ public class Server {
 	public Module[] getModules() {
 		return Main.modules.toArray(new Module[Main.modules.size()]);
 	}
-
-	/* get all Modules */
-	public void reloadModules() {
-        try {
-            Main.modules = null;
-            Main.loadJARs();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
 
 	/* unload module */
 	public boolean unload(String jar) {

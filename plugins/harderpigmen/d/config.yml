@@ -1,0 +1,14 @@
+#If zombie pigmen should always be angry toward players (Default: true)
+enableAnger: true
+
+#Should be -1, 0, 1, or 2. -1 slows pigmen, 0 keeps them normal, 1 makes them faster, 2 is insanely fast.
+changeSpeed: 0
+
+#If zombie pigmen should sometimes spawn without swords (Default: true)
+enableSwordChance: true
+
+#This controls how often a zombie pigman will spawn with a sword. It is based on a 1 in X probability, where x is whatever you have here. (Default: 5)
+swordChance: 5
+
+#Don't Change this. It may be needed in the future.
+configVer: 2

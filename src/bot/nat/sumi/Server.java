@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -88,10 +89,10 @@ public class Server {
 								run.command(message, srv);
 							}
 						};
-						t.setUncaughtExceptionHandler((t1, e) -> {
+					/*	t.setUncaughtExceptionHandler((t1, e) -> {
 							send("PRIVMSG "+ t1.getName().split(" ")[2] +" :"+ Format.BOLD.i + Format.RED.i + e.toString(), "ERROR");
 							e.printStackTrace();
-						});
+						});*/
 						t.start();
 					}
 				}
@@ -181,7 +182,7 @@ public class Server {
 	/* send text to server */
 	public boolean send(String msg, String sender) {
 		try {   // attempt to write message to the output stream
-			conn.getOutputStream().write((msg +"\r\n").getBytes());
+			conn.getOutputStream().write((msg +"\r\n").getBytes(Charset.forName("UTF-8")));
 			System.out.println(":::"+ sender +" Sent: "+ msg);
 			return true;
 
@@ -203,7 +204,7 @@ public class Server {
 				message = "PRIVMSG "+ user +" :"+ msg;
 			}
 
-			conn.getOutputStream().write((message +"\r\n").getBytes());
+			conn.getOutputStream().write((message +"\r\n").getBytes(Charset.forName("UTF-8")));
 			System.out.println(":::"+ sender +" Sent: "+ message);
 			return true;
 

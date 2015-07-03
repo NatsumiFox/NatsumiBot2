@@ -1,5 +1,6 @@
 import bot.nat.sumi.*;
 
+import java.nio.charset.Charset;
 import java.util.Timer;
 import java.util.TimerTask;
 
